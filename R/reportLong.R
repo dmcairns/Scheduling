@@ -1,3 +1,11 @@
+#' reportLongModuleUI
+#'
+#' @param id the id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportLongModuleUI <- function(id){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -25,6 +33,22 @@ reportLongModuleUI <- function(id){
 
 }
 
+#' reportLongModuleServer
+#'
+#' @param id the id
+#' @param input the input
+#' @param output the output
+#' @param session the session
+#' @param inSemester semester passed in
+#' @param theMasterCourses the master list of courses
+#' @param theCombinedData the combined Data
+#' @param theLeaveData the leave data
+#' @param inSemesterCodes all semeser codes
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportLongModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                    theCombinedData, theLeaveData, inSemesterCodes){
   moduleServer(
@@ -62,7 +86,7 @@ reportLongModuleServer <- function(id, input, output, session, inSemester, theMa
             filter(semester==input$theSemester9) %>%
             select("courseID", "section", "instructor") %>%
             arrange(courseID)
-          assign("t.out2", t.out, pos=1)
+          #assign("t.out2", t.out, pos=1)
           t.out
         })
         t.table <- semester.codes

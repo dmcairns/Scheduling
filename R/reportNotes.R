@@ -1,3 +1,11 @@
+#' reportNotesModuleUI
+#'
+#' @param id the id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportNotesModuleUI <- function(id){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -25,6 +33,22 @@ reportNotesModuleUI <- function(id){
 
 }
 
+#' reportNotesModuleServer
+#'
+#' @param id the id
+#' @param input the input
+#' @param output the output
+#' @param session the session
+#' @param inSemester input semester
+#' @param theNotes the notes
+#' @param theCombinedData the combined data
+#' @param allowUpdate allow updates logical
+#' @param rds.path the rds path
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportNotesModuleServer <- function(id, input, output, session, inSemester, theNotes, theCombinedData,
                                     allowUpdate=FALSE, rds.path=NULL){
   moduleServer(

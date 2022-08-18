@@ -1,3 +1,11 @@
+#' reportGraphicalScheduleModuleUI
+#'
+#' @param id the id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportGraphicalScheduleModuleUI <- function(id){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -32,6 +40,23 @@ reportGraphicalScheduleModuleUI <- function(id){
 
 }
 
+#' reportGraphicalScheduleModuleServer
+#'
+#' @param id the id
+#' @param input the input
+#' @param output the output
+#' @param session the session
+#' @param inSemester inSemester
+#' @param theMasterCourses the master course list
+#' @param theCombinedData the combined data
+#' @param theLeaveData the leave data
+#' @param theCourseInventory the course inventory
+#' @param inSemesterCodes the semester codes
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportGraphicalScheduleModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                                 theCombinedData, theLeaveData, theCourseInventory, inSemesterCodes){
   moduleServer(

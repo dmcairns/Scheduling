@@ -1,3 +1,11 @@
+#' instructorLoadModuleUI
+#'
+#' @param id The id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 instructorLoadModuleUI <- function(id){
   ns <- NS(id)
   useShinyjs()
@@ -26,6 +34,25 @@ instructorLoadModuleUI <- function(id){
 
 }
 
+#' instructorLoadModuleServer
+#'
+#' @param id The id
+#' @param input The input
+#' @param output The output
+#' @param session The session
+#' @param inSemester The input semester
+#' @param theMasterCourses the master course list
+#' @param theCombinedData the combined data
+#' @param theLeaveData the leave data
+#' @param theAvailableFacultyData the available faculty data
+#' @param inSemesterCodes insemester codes
+#' @param allowUpdate allow update
+#' @param rds.path rds path
+#'
+#' @return
+#' @export
+#'
+#' @examples
 instructorLoadModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                        theCombinedData, theLeaveData, theAvailableFacultyData,
                                        inSemesterCodes, allowUpdate=FALSE, rds.path=NULL){
@@ -294,7 +321,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         req(input$theSemester10BeginNew)
         req(input$theSemester10EndNew)
 
-        require(crayon)
+        requireNamespace("crayon")
         #################################################
         # Requires that the following data be available #
         # within the calling environment:               #
@@ -483,7 +510,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           showModal(dataModalConfirm(isolate(input$selectRemoveFaculty)))
         }, ignoreInit=TRUE, once=TRUE)  #The once=TRUE argument keeps the observer from being triggered multiple times.
 
-        dataModal <- function() {
+        dataModal1 <- function() {
           ns <- session$ns
           beginSemesterNumeric <- theCombinedData() %>%
             filter(longSemester == input$theSemester10BeginNew) %>%
@@ -517,7 +544,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             size="s"
           )
         }
-        showModal(dataModal())
+        showModal(dataModal1())
       }, ignoreInit=TRUE, once=FALSE)
 
       observeEvent(input$facultyAddButton,{
@@ -692,7 +719,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           )
         })
 
-        dataModal <- function() {
+        dataModal2 <- function() {
           ns <- session$ns
           modalDialog(
             textInput(ns("newFacultyName"), "Faculty Name",
@@ -723,7 +750,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           )
         }
 
-        showModal(dataModal())
+        showModal(dataModal2())
 
       }, ignoreInit=TRUE, once=FALSE)
       observeEvent(input$lastClickAvailableFacultyName1, {
@@ -766,7 +793,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
               select("Faculty", "sem4", "rank1", "index") #%>%
             # mutate(rank1=case_when(Faculty==t.fac & index>=inIndex & !is.na(rank1)  ~ newRank,
             #                        TRUE ~ rank1)) %>%
-            assign("t.junk2", t.junk, pos=1)
+            # assign("t.junk2", t.junk, pos=1)
             cat("!!!!!!!!!!!!!!!!Before the mutate\n")
             t.junk <- t.junk %>%
               mutate(rank1=case_when(((Faculty==t.fac) & (index>=inIndex)) ~ as.character(newRank),
@@ -774,7 +801,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
 
               select("Faculty", "sem4", "rank1") %>%
               pivot_wider(id_cols=Faculty, names_from=sem4, values_from=rank1)
-            assign("t.junk4", t.junk, pos=1)
+            # assign("t.junk4", t.junk, pos=1)
             #probably need to rebuild instructors here.
             #cat("t.fac:", t.fac, "inSemester:", inSemester, "\n")
             recordExists <- rv$loads %>%
@@ -788,7 +815,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
               t.testing <- rv$loads %>%
                 add_row(Faculty=fix.names(t.fac), load=NA, semester=inSemester)
             }
-            assign("t.testing", t.testing, pos=1)
+            #assign("t.testing", t.testing, pos=1)
 
             cat(red("Leaving updateRank.\n"))
             t.junk
@@ -1155,7 +1182,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
       fixNamesNoSpace <- function(inData){
         outData <- gsub(". ", "", inData, fixed=TRUE)
         outData <- gsub("'", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
-        outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
+        #outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
         outData <- gsub(" ", "", outData, fixed=TRUE)
         outData
       }

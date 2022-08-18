@@ -1,3 +1,11 @@
+#' instructorAssignmentModuleUI
+#'
+#' @param id The id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 instructorAssignmentModuleUI <- function(id){
   ns <- NS(id)
   useShinyjs()
@@ -26,6 +34,27 @@ instructorAssignmentModuleUI <- function(id){
 
 }
 
+#' instructorAssignmentModuleServer
+#'
+#' @param id The id
+#' @param input The input
+#' @param output The output
+#' @param session The session
+#' @param inSemester The input semester
+#' @param theMasterCourses The master course list
+#' @param theCombinedData The combined data
+#' @param theLeaveData The leave data
+#' @param inSemesterCodes the semester codes
+#' @param synchronize synchronize boxes
+#' @param chosenSemester the chosen semester
+#' @param suspendWhenHidden suspendWhenHidden
+#' @param allowUpdate Allow for updates
+#' @param rds.path the rds path
+#'
+#' @return
+#' @export
+#'
+#' @examples
 instructorAssignmentModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                              theCombinedData, theLeaveData, inSemesterCodes,
                                              synchronize,

@@ -1,3 +1,11 @@
+#' reportModuleUI
+#'
+#' @param id The id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportModuleUI <- function(id){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -24,6 +32,24 @@ reportModuleUI <- function(id){
 
 }
 
+#' reportModuleServer
+#'
+#' @param id The id
+#' @param input The input
+#' @param output The output
+#' @param session The session
+#' @param inSemester semester passed into function
+#' @param theMasterCourses the master list of courses
+#' @param theCombinedData the combined data
+#' @param theLeaveData leave data
+#' @param inSemesterCodes all semester codes
+#' @param synchronize whether or not the data are synchronized
+#' @param chosenSemester which semester is chosen
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                theCombinedData, theLeaveData, inSemesterCodes, synchronize=NULL,
                                chosenSemester=NULL){
@@ -113,7 +139,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         }
         extract.course <- function(data, index){
           t.out <- data[index,]
-          last.number <<- last.number + 1
+          #last.number <<- last.number + 1
+          last.number <- last.number + 1
           t.out
         }
         individual.element <- function(in.data, i){
@@ -340,11 +367,11 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               TRUE ~ as.double(assigned.load)
             ))
 
-          t.summary.info <<- summary.info
+          # t.summary.info <<- summary.info
+          t.summary.info <- summary.info
 
 
-
-          assign("last.number", 0, pos=1)
+          # assign("last.number", 0, pos=1)
           IDs <- seq_len(nrow(semester.data))
           numInstructors <- dim(summary.info)[1]
 
@@ -367,7 +394,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               #contracted.load <- 0
               t.out.partial <- NULL
             } else {
-              displayedInstructors <<- displayedInstructors + 1
+              #displayedInstructors <<- displayedInstructors + 1
+              displayedInstructors <- displayedInstructors + 1
               if(unlist(contracted.load)==modified.assigned.load){
                 css.courseLoadStatus <- "LegacyReportFacultyOK"
               } else {
@@ -409,9 +437,11 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
                         div(column(2, div("Courses")))
                       ))
                 )
-                renderHeader <<- FALSE
+                #renderHeader <<- FALSE
+                renderHeader <- FALSE
 
               } else t.out.partial1 <- NULL
+
 
               t.out.partial2 <- list(
                 div(id=paste0("rowLegacyReport", i),
@@ -428,7 +458,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             }
             t.out.partial
           })#end of lapply that generates the UI
-          t.out.check <<- t.out
+          #t.out.check <<- t.out
+          t.out.check <- t.out
         } #end of else checking to see that there are data
 
         if(displayedInstructors == 0){

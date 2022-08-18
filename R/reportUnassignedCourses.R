@@ -1,3 +1,11 @@
+#' reportUnassignedCoursesModuleUI
+#'
+#' @param id the id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportUnassignedCoursesModuleUI <- function(id){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -25,6 +33,25 @@ reportUnassignedCoursesModuleUI <- function(id){
 
 }
 
+#' reportUnassignedCoursesModuleServer
+#'
+#' @param id the id
+#' @param input the input
+#' @param output the output
+#' @param session the session
+#' @param inSemester input semester
+#' @param theMasterCourses the master course list
+#' @param theCombinedData the combined data
+#' @param theLeaveData the leave data
+#' @param inSemesterCodes the semester codes
+#' @param synchronize synchronize boxes
+#' @param chosenSemester the chosen semester
+#' @param suspendWhenHidden suspend when hidden
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportUnassignedCoursesModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                                 theCombinedData, theLeaveData, inSemesterCodes, synchronize,
                                                 chosenSemester=NULL, suspendWhenHidden){

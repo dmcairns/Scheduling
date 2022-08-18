@@ -1,3 +1,12 @@
+#' courseListingUI
+#'
+#' @param id the id
+#' @param label the label
+#'
+#' @return
+#' @export
+#'
+#' @examples
 courseListingUI <- function(id, label = "Course Listing"){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -24,6 +33,23 @@ courseListingUI <- function(id, label = "Course Listing"){
                  ))
 }
 
+#' courseListingServer
+#'
+#' @param id The id
+#' @param inSemesterCodes the inSemesterCodes
+#' @param theMasterCourses the master courses
+#' @param theFaculty the Faculty
+#' @param theCoursesOffered the coursesOffered
+#' @param theCombinedData theCombined Data
+#' @param theCourseInventory the courseInventory
+#' @param showDebugCues logical variable to show debug cues
+#' @param synchronize synchronize across boxes
+#' @param chosenSemester the semester chosen
+#'
+#' @return
+#' @export
+#'
+#' @examples
 courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFaculty,
                                 theCoursesOffered, theCombinedData, theCourseInventory,
                                 showDebugCues, synchronize,

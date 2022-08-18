@@ -1,3 +1,11 @@
+#' reportFacultyModuleUI
+#'
+#' @param id the id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportFacultyModuleUI <- function(id){
   ns <- NS(id)
   htmltools::div(class="aBoxContainerDiv",
@@ -25,6 +33,25 @@ reportFacultyModuleUI <- function(id){
 
 }
 
+#' reportFacultyModuleServer
+#'
+#' @param id the id
+#' @param input the input
+#' @param output the output
+#' @param session the session
+#' @param inSemester in semester
+#' @param theMasterCourses the master course list
+#' @param theCombinedData the combined data
+#' @param theLeaveData the leave data
+#' @param inSemesterCodes in semester codes
+#' @param inSelectedFaculty in selected faculty
+#' @param allowUpdate allowupdate
+#' @param rds.path rds path
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reportFacultyModuleServer <- function(id, input, output, session, inSemester, theMasterCourses,
                                       theCombinedData, theLeaveData, inSemesterCodes,
                                       inSelectedFaculty, allowUpdate=FALSE, rds.path=NULL){

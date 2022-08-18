@@ -1,5 +1,13 @@
+#' fullSchedulingBoxModuleUI
+#'
+#' @param id The element id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 fullSchedulingBoxModuleUI <- function(id){
-  ns <- NS(id)
+  ns <- shiny::NS(id)
   shinydashboardPlus::box(
     id = "schedulingBox",
     title = "Scheduling Tools",
@@ -9,14 +17,14 @@ fullSchedulingBoxModuleUI <- function(id){
     solidHeader = FALSE,
     collapsible = FALSE,
     tagList(
-      uiOutput(ns("schedulingTools"))
+      shiny::uiOutput(ns("schedulingTools"))
     ),
     sidebar = boxSidebar(
       id = "schedulingSidebar",                #make sure that this is unique
       width = 25,                              #width can be no smaller than 25%
       tagList(
-        uiOutput(ns("sidebarSemesterUI")),
-        uiOutput(ns("synchronize"))
+        shiny::uiOutput(ns("sidebarSemesterUI")),
+        shiny::uiOutput(ns("synchronize"))
 
       )
     )
@@ -24,13 +32,25 @@ fullSchedulingBoxModuleUI <- function(id){
 
 }
 
+#' fullSchedulingBoxModuleServer
+#'
+#' @param id The element id
+#' @param input The input element
+#' @param output The output element
+#' @param session The session
+#' @param schedulingDataBundle The entire dataset
+#'
+#' @return
+#' @export
+#'
+#' @examples
 fullSchedulingBoxModuleServer <- function(id, input, output, session, schedulingDataBundle){
   moduleServer(
     id,
     function(input, output, session){
-      cat(yellow("[fullSchedulingBoxModuleServer]\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]\n"))
       allowUpdate <- FALSE   #Doesn't work if set to TRUE
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("allowUpdate:", allowUpdate, "\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("allowUpdate:", allowUpdate, "\n"))
       ns <- session$ns
       rvFocalSemester <- reactiveVal(NA)
       rvReferenceSemester <- reactiveVal(NA)
@@ -69,7 +89,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       }
 
       output$schedulingTools <- renderUI({
-        cat(yellow("[schedulingTools1]\n"))
+        #cat(yellow("[schedulingTools1]\n"))
         tagList(
           fluidRow(
             column(6,
@@ -127,7 +147,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       fixNamesNoSpace <- function(inData){
         outData <- gsub(". ", "", inData, fixed=TRUE)
         outData <- gsub("'", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
-        outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
+        #outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
         outData <- gsub(" ", "", outData, fixed=TRUE)
         outData
       }
@@ -174,21 +194,21 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
 
 
       observeEvent(modifiedData$mcData, {
-        cat(yellow("[App] modifiedData$mcData changed\n"))
+        #cat(yellow("[App] modifiedData$mcData changed\n"))
         theRVData$mcData <- modifiedData$mcData
       })
       observeEvent(modifiedData1$mcData, {
-        cat(yellow("[App] modifiedData1$mcData changed\n"))
-        cat(red("here\n"))
+        #cat(yellow("[App] modifiedData1$mcData changed\n"))
+        #cat(red("here\n"))
         theRVData$mcData <- modifiedData1$mcData
       })
       observeEvent(modifiedData1$combinedData, {
-        cat(yellow("[App] modifiedData1$combinedData changed\n"))
-        cat(red("here\n"))
+        #cat(yellow("[App] modifiedData1$combinedData changed\n"))
+        #cat(red("here\n"))
         theRVData$combinedData <- modifiedData1$combinedData
       })
       observeEvent(modifiedData2$combinedData, {
-        cat(yellow("[App] modifiedData2$combinedData changed\n"))
+        #cat(yellow("[App] modifiedData2$combinedData changed\n"))
         theRVData$combinedData <- modifiedData2$combinedData
         if(!is.null(modifiedData2$afData)){
           theRVData$afData <- modifiedData2$afData
@@ -201,15 +221,15 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         }
       })
       observeEvent(modifiedData$afData, {
-        cat(yellow("[App] modifiedData$afData changed\n"))
+        #cat(yellow("[App] modifiedData$afData changed\n"))
         theRVData$afData <- modifiedData$afData
       })
       observeEvent(modifiedData$combinedData, {
-        cat(yellow("[App] modifiedData$combinedData changed\n"))
+        #cat(yellow("[App] modifiedData$combinedData changed\n"))
         theRVData$combinedData <- modifiedData$combinedData
       })
       observeEvent(modifiedData3$mcData, {
-        cat(yellow("[App] modifiedData3$mcData changed\n"))
+        #cat(yellow("[App] modifiedData3$mcData changed\n"))
         theRVData$mcData <- modifiedData3$mcData
       })
       observeEvent(modifiedNotes$notes, {
@@ -222,7 +242,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
 
       })
 
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("Before modules\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("Before modules\n"))
       reportModuleServer("testReport", inSemester=reactive(input$sidebarSemester),
                          theMasterCourses=reactive(theRVData$mcData),
                          theCombinedData=reactive(theRVData$combinedData),
@@ -231,7 +251,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                          synchronize=reactive(input$synchSwitch),
                          chosenSemester=reactive(input$sidebarSemester)
       )
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportModuleServer\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportModuleServer\n"))
       reportUnassignedCoursesModuleServer("unassigned", inSemester=reactive(input$sidebarSemester),
                                           theMasterCourses=reactive(theRVData$mcData),
                                           theCombinedData=reactive(theRVData$combinedData),
@@ -241,7 +261,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                                           chosenSemester=reactive(input$sidebarSemester),
                                           suspendWhenHidden=reactive(input$suspendWhenHidden)
       )
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportUnassignedCoursesModuleServer\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportUnassignedCoursesModuleServer\n"))
       rvSingleFaculty <- reportFacultyModuleServer("singleFaculty", inSemester=reactive(input$sidebarSemester),
                                                    theMasterCourses=reactive(theRVData$mcData),
                                                    theCombinedData=reactive(theRVData$combinedData),
@@ -249,20 +269,20 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                                                    inSemesterCodes=semester.codes,
                                                    inSelectedFaculty = reactive(rvSingleFaculty),
                                                    allowUpdate=allowUpdate, rds.path=rds.path)
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportFacultyModuleServer\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportFacultyModuleServer\n"))
       reportMultiSectionModuleServer("multiSection", inSemester=reactive(input$sidebarSemester),
                                      theMasterCourses=reactive(theRVData$mcData),
                                      theCombinedData=reactive(theRVData$combinedData),
                                      theLeaveData=reactive(theRVData$leaveData),
                                      inSemesterCodes=semester.codes)
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportMultiSectionModuleServer\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportMultiSectionModuleServer\n"))
       modifiedData3 <- reportGraphicalScheduleModuleServer("graphicalSchedule", inSemester=reactive(input$sidebarSemester),
                                                            theMasterCourses=reactive(theRVData$mcData),
                                                            theCombinedData=reactive(theRVData$combinedData),
                                                            theLeaveData=reactive(theRVData$leaveData),
                                                            theCourseInventory=schedulingDataBundle$course.inventory,
                                                            inSemesterCodes=semester.codes)
-      cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportGraphicalScheduleModuleServer\n"))
+      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportGraphicalScheduleModuleServer\n"))
       modifiedData1 <- instructorAssignmentModuleServer("assignment", inSemester=reactive(input$sidebarSemester),
                                                         theMasterCourses=reactive(theRVData$mcData),
                                                         theCombinedData=reactive(theRVData$combinedData),

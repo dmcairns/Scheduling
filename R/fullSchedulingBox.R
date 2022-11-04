@@ -10,7 +10,7 @@ fullSchedulingBoxModuleUI <- function(id){
   ns <- shiny::NS(id)
   shinydashboardPlus::box(
     id = "schedulingBox",
-    title = "Scheduling Tools1",
+    title = "Scheduling Tools",
     closable = TRUE,
     width = 12,
     height = "500px",

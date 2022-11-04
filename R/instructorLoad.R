@@ -175,8 +175,9 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         chosenSemesterIndex <- inSemesterCodes %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
           filter(longSemester==chosenSemester) %>%
-          select(index) %>%
-          unlist()
+          pull(index)
+          # select(index) %>%
+          # unlist()
 
         #################################################
         # Now find the index value of the beginning     #
@@ -190,8 +191,9 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           beginSemesterIndex <- inSemesterCodes %>%
             mutate(longSemester=paste(semester.chr, Year)) %>%
             filter(longSemester==input$theSemester10BeginNew) %>%
-            select(index) %>%
-            unlist()
+            pull(index)
+            # select(index) %>%
+            # unlist()
         }
 
 
@@ -278,10 +280,12 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             filter(semester.display==input$theSemester10EndNew) %>%
             select("semester4") %>%
             unlist()
+
           reducedFacultyData <- theAvailableFacultyData() %>%
             mutate(Faculty=factor(Faculty)) %>%
             gather_("semester", "code", names(.)[-1]) %>%
-            left_join(semester.codes, by=c("semester"="semester4")) %>%
+            mutate(semester=toupper(semester)) %>%
+            left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
             filter(semester >= targetBegin) %>%
             filter(semester <= targetEnd) %>%
             filter(!is.na(code)) %>%
@@ -342,18 +346,22 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         # How to handle changing a generic VAP to an existing person.  Need to update the course assignments.
         # Fix year arrow buttons so they work
         #cat(blue("Here ...................\n"))
+        #browser()
         firstSemester <- input$theSemester10BeginNew
         lastSemester <- input$theSemester10EndNew
         firstSemesterIndex <- inSemesterCodes %>%
           filter(longSemester==firstSemester) %>%
           select(current) %>%
-          unlist() %>%
-          as.numeric()
+          pull(current)
+          # unlist() %>%
+          # as.numeric()
         lastSemesterIndex <- inSemesterCodes %>%
           filter(longSemester==lastSemester) %>%
           select(current) %>%
-          unlist() %>%
-          as.numeric()
+          pull(current)
+        #%>%
+          # unlist() %>%
+          # as.numeric()
 
         loadTableData <- theCombinedData() %>%
           filter(numericSemester >= firstSemesterIndex) %>%
@@ -390,19 +398,22 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         currentIndex <- inSemesterCodes %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
           filter(longSemester == input$theSemester10BeginNew) %>%
-          select(index) %>%
-          unlist()
+          pull(index)
+          # select(index) %>%
+          # unlist()
         endIndex <- inSemesterCodes %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
           filter(longSemester == input$theSemester10EndNew) %>%
-          select(index) %>%
-          unlist()
+          pull(index)
+          # select(index) %>%
+          # unlist()
         oneSemesterEarlierIndex <- currentIndex-1
         oneSemesterEarlierLongSemester <- inSemesterCodes %>%
           filter(index==oneSemesterEarlierIndex) %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
-          select(longSemester) %>%
-          unlist()
+          pull(longSemester)
+          # select(longSemester) %>%
+          # unlist()
         numSemestersDisplayed <- endIndex-currentIndex+1
         #cat("oneSemesterEarlierLongSemester:", oneSemesterEarlierLongSemester, "numSemestersDisplayed:", numSemestersDisplayed, "\n")
         #cat("rv$numSemestersDisplayed:", isolate(rv$numSemestersDisplayed), "gridSemesters Displayed:", gridSemestersDisplayed, "\n")
@@ -413,8 +424,9 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             newLastLongSemester <- inSemesterCodes %>%
               filter(index==(currentLastIndex-1)) %>%
               mutate(longSemester=paste(semester.chr, Year)) %>%
-              select(longSemester) %>%
-              unlist()
+              pull(longSemester)
+              # select(longSemester) %>%
+              # unlist()
             toReturn$viewEndSemester <- newLastLongSemester
             toReturn$viewBeginSemester <- oneSemesterEarlierLongSemester
           } else{
@@ -426,22 +438,26 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
       observeEvent(input$displayOneSemesterLater,{
         #cat("Entering observeEvent for input$displayOneSemesterLater.\n ")
         #cat("right arrow pushed\n")
+
         currentIndex <- inSemesterCodes %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
           filter(longSemester == input$theSemester10EndNew) %>%
-          select(index) %>%
-          unlist()
+          pull(index)
+          # select(index) %>%
+          # unlist()
         oneSemesterLaterIndex <- currentIndex+1
         oneSemesterLaterLongSemester <- inSemesterCodes %>%
           filter(index==oneSemesterLaterIndex) %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
-          select(longSemester) %>%
-          unlist()
+          pull(longSemester)
+          # select(longSemester) %>%
+          # unlist()
         endIndex <- inSemesterCodes %>%
           mutate(longSemester=paste(semester.chr, Year)) %>%
           filter(longSemester == input$theSemester10EndNew) %>%
-          select(index) %>%
-          unlist()
+          pull(index)
+          # select(index) %>%
+          # unlist()
         numSemestersDisplayed <- endIndex-currentIndex+1
         currentBeginIndex <- currentIndex - numSemestersDisplayed + 1
 
@@ -452,8 +468,9 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             newFirstLongSemester <- inSemesterCodes %>%
               filter(index==(currentBeginIndex)) %>%
               mutate(longSemester=paste(semester.chr, Year)) %>%
-              select(longSemester) %>%
-              unlist()
+              pull(longSemester)
+              # select(longSemester) %>%
+              # unlist()
             toReturn$viewBeginSemester <- newFirstLongSemester
             toReturn$viewEndSemester <- oneSemesterLaterLongSemester
             #rv$availableFacultySemesterBeginNew <- newFirstLongSemester
@@ -870,6 +887,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             select("Faculty", "shortSemester", "new.rank", "numericSemester"="current", "sem2"="current.code", "longSemester")
 
           duplicateLastNames <- c("Guneralp", "Bednarz")
+
           revisedCombinedData <- revisedCombinedData %>%
             mutate(numericSemester=as.character(numericSemester)) %>%
             full_join(tTemp, by=c("Faculty", "shortSemester", "numericSemester", "sem2", "longSemester")) %>%
@@ -1035,6 +1053,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           filter(shortName==inShortFacultyNameWithInitial) %>%
           filter(longSemester==inSemesterLong) %>%
           select("load") %>%
+          pull(load) %>%
           as.numeric()
 
         incrementLoadValue <- function(load, max.load=6){
@@ -1047,11 +1066,15 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           }
           newLoad
         }
+#browser()
+# the problem is with TRUE ~ load
 
         theRevisedCombinedData <- theCombinedData() %>%
+          mutate(load = as.numeric(load)) %>%
           mutate(load = case_when((Faculty==inLongFacultyName) &
                                     (longSemester==inSemesterLong) ~ incrementLoadValue(existingLoad),
-                                  TRUE ~ load)) %>%
+                                  TRUE ~ load))
+        theRevisedCombinedData <- theRevisedCombinedData %>%
           replace_with_na(replace = list(load = c(-9999)))
 
         toReturn$combinedData <- theRevisedCombinedData

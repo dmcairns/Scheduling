@@ -424,14 +424,10 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         # theOfferedSections is a reactive variable passed into the module
 
         req(input$theSemester1)
-        #cat("[classOptionsNewDT]:\n")
-        #print(testPassing)
-        #cat("**************\n")
-        #observe(testPassing <- testPassing*2)
+
         determineSingleSemesterOfferingsSections <- function(data, inSemester, course.inventory){
 
           req(inSemester)
-
           t.sections <- data() %>%
             right_join(course.inventory, by=c("courseID"))
           t.sections1 <- t.sections %>%
@@ -448,16 +444,12 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         }
 
         theSemester <- input$theSemester1
-        sem.code <- semester.codes %>%
+        sem.code <- inSemesterCodes %>%
           filter(longSemester==theSemester) %>%
           select(current.code) %>%
           unlist() %>%
           as.character()
-        #offeredSectionsNew <- rv$offeredSections[[theSemester]]
-        #offeredSectionsNew <- theOfferedSections[[theSemester]]
 
-        # sections.offered <- determineSingleSemesterOfferingsSections(rv$master.courses,
-        #                                                              theSemester, course.inventory)
         sections.offered <- determineSingleSemesterOfferingsSections(theMasterCourses,
                                                                      theSemester, theCourseInventory)
 
@@ -518,7 +510,7 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           mutate(Faculty=factor(Faculty)) %>%
           gather_("semester", "code", names(.)[-1]) %>%
           mutate(Faculty=as.character(Faculty)) %>%
-          left_join(semester.codes, by=c("semester"="semester4")) %>%
+          left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
           filter(semester == convertSemester(isolate(input$theSemester1), inSemesterCodes)) %>%
           filter(!is.na(code)) %>%
           select("Faculty") %>%
@@ -555,7 +547,7 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
 
         t.courseID <- t.elements[2]
         t.sem <- t.elements[3]
-        t.sem1 <- semester.codes %>%
+        t.sem1 <- inSemesterCodes %>%
           filter(current.code==t.sem) %>%
           select(longSemester) %>%
           unlist() %>%
@@ -599,7 +591,7 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
       # Helper Functions          #
       #############################
 
-      convertSemester <- function(inputSemester, semesterTable=semester.codes){
+      convertSemester <- function(inputSemester, semesterTable=inSemesterCodes){
         #   ############################################
         #   # converts a semester from display format  #
         #   # (Fall 2018) to 4code format (2018C)      #

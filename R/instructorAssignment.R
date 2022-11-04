@@ -274,7 +274,7 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
       #############################
       # Utility Functions         #
       #############################
-      convertSemester <- function(inputSemester, semesterTable=semester.codes){
+      convertSemester <- function(inputSemester, semesterTable=inSemesterCodes){
         #   ############################################
         #   # converts a semester from display format  #
         #   # (Fall 2018) to 4code format (2018C)      #

@@ -188,7 +188,7 @@ reportMultiSectionModuleServer <- function(id, input, output, session, inSemeste
         }
         create.online.matrix <- function(data, num.semesters){
 
-          sem.codes <- semester.codes %>%
+          sem.codes <- inSemesterCodes %>%
             mutate(full.semester=paste(semester.chr, Year))
           data1 <- data %>%
             left_join(sem.codes, by=c("semester"="full.semester")) %>%

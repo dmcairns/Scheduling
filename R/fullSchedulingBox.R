@@ -10,7 +10,7 @@ fullSchedulingBoxModuleUI <- function(id){
   ns <- shiny::NS(id)
   shinydashboardPlus::box(
     id = "schedulingBox",
-    title = "Scheduling Tools",
+    title = "Scheduling Tools1",
     closable = TRUE,
     width = 12,
     height = "500px",
@@ -64,6 +64,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       read.legacy <- FALSE
       accessRemoteData <- FALSE
       rds.path <- ".//Data//"
+      semester.codes <- schedulingDataBundle$semester.codes
 
       #print(schedulingDataBundle$mcData)
       theRVData <- reactiveValues(mcData=schedulingDataBundle$mcData, afData=schedulingDataBundle$afData,
@@ -86,70 +87,6 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         courseData <- courseData[!t.duplicated,]
         courseData <- courseData[order(courseData$courseID),]
         courseData
-      }
-
-      output$schedulingTools <- renderUI({
-        #cat(yellow("[schedulingTools1]\n"))
-        tagList(
-          fluidRow(
-            column(6,
-                   fluidRow(courseListingUI(ns("courseList"))),
-                   fluidRow(instructorAssignmentModuleUI(ns("assignment"))),
-                   fluidRow(instructorLoadModuleUI(ns("load")))),
-            column(6,
-                   fluidRow(
-                     column(12, reportModuleUI(ns("testReport"))),
-                     column(12, reportUnassignedCoursesModuleUI(ns("unassigned"))),
-                     column(12, reportFacultyModuleUI(ns("singleFaculty"))),
-                     column(12, reportMultiSectionModuleUI(ns("multiSection"))),
-                     column(12, reportNotesModuleUI(ns("notes"))),
-                     #column(12, reportLongModuleUI("long")),
-                     column(12, reportGraphicalScheduleModuleUI(ns("graphicalSchedule")))
-                   )
-            )
-          )
-        )
-      })
-
-      output$sidebarSemesterUI <- renderUI({
-        ns <- session$ns
-        #cat(yellow("[fullSchedulingBoxModuleServer]"), green("output$sidebarSemesterUI\n"))
-        #print(schedulingDataBundle$semester.codes)
-        #print(names(schedulingDataBundle))
-        #assign("t.1", schedulingDataBundle, pos=1)
-        #cat(yellow("[fullSchedulingBoxModuleServer]"), green("after print semester.codes\n"))
-        currentYear <- year(today())
-        currentYearPlus5 <- currentYear+5
-        useSemesters <- schedulingDataBundle$semester.codes %>%
-          filter(Year <= currentYearPlus5) %>%
-          filter(as.character(current) >= "201431")
-
-
-        chosen.semester <- useSemesters %>%
-          filter(semester4==CurrentSemester()) %>%
-          select("semester.display") %>%
-          unlist() %>%
-          as.vector()
-
-        #cat(blue("chosen.semester:", chosen.semester, "\n"))
-        t.out <- div(id=ns("sidebarSemesterDiv"), class="semesterSelect",
-                     selectInput(ns("sidebarSemester"), "Semester",
-                                 useSemesters$semester.display, selected = chosen.semester)
-        )
-        t.out
-      })
-      output$synchronize <- renderUI({
-        ns <- session$ns
-        materialSwitch(ns("synchSwitch"), value=TRUE, label="Synchronize")
-      })
-
-
-      fixNamesNoSpace <- function(inData){
-        outData <- gsub(". ", "", inData, fixed=TRUE)
-        outData <- gsub("'", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
-        #outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
-        outData <- gsub(" ", "", outData, fixed=TRUE)
-        outData
       }
       CurrentSemester <- function(numeric=FALSE, digits=4){
         t.year <- year(Sys.Date())
@@ -180,6 +117,71 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           current.semester1 <- paste(paste.year+1, t.letter, sep="")
         }
         current.semester1
+      }
+      output$schedulingTools <- renderUI({
+        #cat(yellow("[schedulingTools1]\n"))
+        tagList(
+          fluidRow(
+            column(6,
+                   fluidRow(courseListingUI(ns("courseList"))),
+                   fluidRow(instructorAssignmentModuleUI(ns("assignment"))),
+                   fluidRow(instructorLoadModuleUI(ns("load")))),
+            column(6,
+                   fluidRow(
+                     column(12, reportModuleUI(ns("testReport"))),
+                     column(12, reportUnassignedCoursesModuleUI(ns("unassigned"))),
+                     column(12, reportFacultyModuleUI(ns("singleFaculty"))),
+                     column(12, reportMultiSectionModuleUI(ns("multiSection"))),
+                     column(12, reportNotesModuleUI(ns("notes"))),
+                     #column(12, reportLongModuleUI("long")),
+                     column(12, reportGraphicalScheduleModuleUI(ns("graphicalSchedule")))
+                   )
+            )
+          )
+        )
+      })
+
+      output$sidebarSemesterUI <- renderUI({
+        ns <- session$ns
+        #cat(yellow("[fullSchedulingBoxModuleServer]"), green("output$sidebarSemesterUI\n"))
+        #print(schedulingDataBundle$semester.codes)
+        #print(names(schedulingDataBundle))
+        #assign("t.1", schedulingDataBundle, pos=1)
+        #cat(yellow("[fullSchedulingBoxModuleServer]"), green("after print semester.codes\n"))
+
+        currentYear <- year(today())
+        currentYearPlus5 <- currentYear+5
+        useSemesters <- schedulingDataBundle$semester.codes %>%
+          filter(Year <= currentYearPlus5) %>%
+          filter(as.character(current) >= "201431")
+
+
+        chosen.semester <- useSemesters %>%
+          filter(semester4==CurrentSemester()) %>%
+          select("semester.display") %>%
+          unlist() %>%
+          as.vector()
+
+        #cat(blue("chosen.semester:", chosen.semester, "\n"))
+        t.out <- div(id=ns("sidebarSemesterDiv"), class="semesterSelect",
+                     selectInput(ns("sidebarSemester"), "Semester",
+                                 useSemesters$semester.display, selected = chosen.semester)
+        )
+        t.out
+      })
+      output$synchronize <- renderUI({
+        ns <- session$ns
+        materialSwitch(ns("synchSwitch"), value=TRUE, label="Synchronize")
+      })
+
+      schedulingDataBundle$course.inventory <- create.course.inventory(schedulingDataBundle$mcData)
+
+      fixNamesNoSpace <- function(inData){
+        outData <- gsub(". ", "", inData, fixed=TRUE)
+        outData <- gsub("'", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
+        #outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
+        outData <- gsub(" ", "", outData, fixed=TRUE)
+        outData
       }
 
       modifiedData <- courseListingServer("courseList", inSemesterCodes=semester.codes,
@@ -269,20 +271,20 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                                                    inSemesterCodes=semester.codes,
                                                    inSelectedFaculty = reactive(rvSingleFaculty),
                                                    allowUpdate=allowUpdate, rds.path=rds.path)
-      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportFacultyModuleServer\n"))
+      # #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportFacultyModuleServer\n"))
       reportMultiSectionModuleServer("multiSection", inSemester=reactive(input$sidebarSemester),
                                      theMasterCourses=reactive(theRVData$mcData),
                                      theCombinedData=reactive(theRVData$combinedData),
                                      theLeaveData=reactive(theRVData$leaveData),
                                      inSemesterCodes=semester.codes)
-      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportMultiSectionModuleServer\n"))
+      # #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportMultiSectionModuleServer\n"))
       modifiedData3 <- reportGraphicalScheduleModuleServer("graphicalSchedule", inSemester=reactive(input$sidebarSemester),
                                                            theMasterCourses=reactive(theRVData$mcData),
                                                            theCombinedData=reactive(theRVData$combinedData),
                                                            theLeaveData=reactive(theRVData$leaveData),
                                                            theCourseInventory=schedulingDataBundle$course.inventory,
                                                            inSemesterCodes=semester.codes)
-      #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportGraphicalScheduleModuleServer\n"))
+      # #cat(yellow("[fullSchedulingBoxModuleServer]"), green("After reportGraphicalScheduleModuleServer\n"))
       modifiedData1 <- instructorAssignmentModuleServer("assignment", inSemester=reactive(input$sidebarSemester),
                                                         theMasterCourses=reactive(theRVData$mcData),
                                                         theCombinedData=reactive(theRVData$combinedData),

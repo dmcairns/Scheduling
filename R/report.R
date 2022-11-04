@@ -63,6 +63,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         combinedData=NULL,
         viewSemester=NULL
       )
+      displayedInstructors <- 0
       #############################
       # Input Elements            #
       #############################
@@ -111,19 +112,15 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         theTitle
       })
       output$legacyReport1 <- renderUI({
+        cat(yellow("Entered legacyReport1\n"))
         req(inSemester())     #May not be necessary
         req(theMasterCourses())
         req(theCombinedData())
+        cat(yellow("Past req statements\n"))
         ns <- session$ns
         renderHeader <- TRUE
-        displayedInstructors <- 0
+        #displayedInstructors <- 0
 
-        # t.assignedLoads <- theCombinedData() %>%
-        #   filter(longSemester==inSemester()) %>%
-        #   filter(shortNameNoSpace %in% c("Bishop", "Cairns", "Jepson", "Ewers")) %>%
-        #   select("shortNameNoSpace", "longSemester", "load", "assigned.load")
-        #
-        # print(t.assignedLoads)
 
         find.courses <- function(data, data.summary, i){
           #pull out the courses that are taught by a specific instructor
@@ -139,8 +136,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         }
         extract.course <- function(data, index){
           t.out <- data[index,]
-          #last.number <<- last.number + 1
-          last.number <- last.number + 1
+          last.number <<- last.number + 1
+          #last.number <- last.number + 1
           t.out
         }
         individual.element <- function(in.data, i){
@@ -170,7 +167,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             # then there needs to be a reason for it.  Otherwise, the lack of
             # courses just means that they haven't been assigned yet.
 
-
             t.load <- theCombinedData() %>%
               filter(shortName == instructor.of.interest) %>%
               #filter(longSemester == inSemester()) %>%
@@ -178,7 +174,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               select("Faculty"="shortName", "semester"="longSemester", "load") %>%
               mutate(load = case_when(
                 is.na(load) ~ 0,
-                TRUE ~ load
+                TRUE ~ as.numeric(load)
               )) %>%
               unlist()
 
@@ -327,7 +323,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         #t.sem <- inSemester()
         req(input$theSemester1)
         t.sem <- input$theSemester1
-        semester.code.new <- semester.codes %>%
+        semester.code.new <- inSemesterCodes %>%
           mutate(sem.name=paste(semester.chr, Year)) %>%
           filter(sem.name==t.sem) %>%
           mutate(sem5=paste0("20", current.code)) %>%
@@ -336,9 +332,14 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
 
 
         #get the data for the specified semester
+        cat(blue("dim(theMasterCourses()):", dim(theMasterCourses()), "\n"))
+        cat(blue("input$theSemester1:", input$theSemester1, "\n"))
         semester.data <- theMasterCourses() %>%
           #filter(semester==inSemester())
           filter(semester==input$theSemester1)
+
+        cat(blue("dim(semester.data):", dim(semester.data), "\n"))
+        cat(blue("displayedInstructors:", displayedInstructors, "\n"))
 
         if(dim(semester.data)[1] == 0){
           t.out <- h4("No courses are scheduled to be taught this term.  Add courses using the Course Selection tab.", style="color: red")
@@ -371,9 +372,10 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           t.summary.info <- summary.info
 
 
-          # assign("last.number", 0, pos=1)
+          assign("last.number", 0, pos=1)
           IDs <- seq_len(nrow(semester.data))
           numInstructors <- dim(summary.info)[1]
+          cat(yellow("numInstructors:", numInstructors, "\n"))
 
           t.out <- lapply(1:(numInstructors), function(i) {
             # determine load level (OK, overload, underload), assign to css.courseLoadStatus
@@ -386,7 +388,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               filter(instructor==summary.info$instructor[i]) %>%
               select(assigned.load) %>%
               unlist()
-
+#browser()
             #annual.load <- calc.annual.courses.assigned.including.stacked.New(t.summary.info$instructor[i], inSemester())
             annual.load <- calc.annual.courses.assigned.including.stacked.New(t.summary.info$instructor[i], input$theSemester1)
             if(is.na(contracted.load)) {
@@ -395,7 +397,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               t.out.partial <- NULL
             } else {
               #displayedInstructors <<- displayedInstructors + 1
-              displayedInstructors <- displayedInstructors + 1
+              displayedInstructors <<- displayedInstructors + 1
+              #cat(blue("iterated displayedInstructors:", displayedInstructors, "\n"))
               if(unlist(contracted.load)==modified.assigned.load){
                 css.courseLoadStatus <- "LegacyReportFacultyOK"
               } else {
@@ -408,7 +411,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               } else {
                 cssClass <- "evenRow2"
               }
-              fallOrSpring <- semester.codes %>%
+              fallOrSpring <- inSemesterCodes %>%
                 #filter(longSemester==inSemester()) %>%
                 filter(longSemester==input$theSemester1) %>%
                 select("semester.chr") %>%
@@ -437,8 +440,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
                         div(column(2, div("Courses")))
                       ))
                 )
-                #renderHeader <<- FALSE
-                renderHeader <- FALSE
+                renderHeader <<- FALSE
+
 
               } else t.out.partial1 <- NULL
 
@@ -462,6 +465,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           t.out.check <- t.out
         } #end of else checking to see that there are data
 
+        cat(red("displayedInstructors:", displayedInstructors, "\n"))
         if(displayedInstructors == 0){
           #t.out <- h4(paste0("No instructors have assigned courses for ", inSemester(), "."), style="color: red")
           t.out <- h4(paste0("No instructors have assigned courses for ", input$theSemester1, "."), style="color: red")

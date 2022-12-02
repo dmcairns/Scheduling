@@ -58,6 +58,7 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
     id,
     ## Below is the module function
     function(input, output, session) {
+      #browser()
       ns <- session$ns
       vals <- reactiveValues()
 
@@ -218,16 +219,23 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           if ("H" %in% input$courseCharacteristics1) localH <- TRUE
           if ("SA" %in% input$courseCharacteristics1) localSA <- TRUE
         }
+
         cat(red("before add_row\n"))
 
-        theRevisedMasterCourses <- theMasterCourses() %>%
-          add_row(Department = as.character(localDepartment),
+        theRevisedMasterCourses <- theMasterCourses()
+        nextRecNum <- max(as.numeric(theRevisedMasterCourses$recnum))+1
+        # theRevisedMasterCourses <- theRevisedMasterCourses %>%
+        #   mutate(nr=as.numeric(recnum))
+#        theRevisedMasterCourses <- theMasterCourses() %>%
+        theRevisedMasterCourses <- theRevisedMasterCourses %>%
+          add_row(recnum = as.character(nextRecNum),
+                  Department = as.character(localDepartment),
                   Course = as.character(localCourse),
                   Description = as.character(localDescription),
                   semester = as.character(localSemester),
                   instructor = as.character(localInstructor),
                   courseID = as.character(localCourseID),
-                  section = as.character(localSection),
+                  section = bit64::as.integer64(localSection),
                   W = localW,
                   C = localC,
                   OL = localOL,
@@ -255,58 +263,59 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         # if there are no courses scheduled for localSemester, then the following will throw
         # an error.  need to add not only the course, but the semester to rv$offeredCourses.
         #if(is.null(rv$offeredCourses[localSemester][[1]])){
-        theRevisedCoursesOffered <- theCoursesOffered()
-        if(is.null(theRevisedCoursesOffered[localSemester][[1]])){
-          #create the dataframe for this.
-          # Make sure that it is being added appropriately to rv$offeredCourses.
-          #  Get this warning:
-          # Warning in rv$offeredCourses[localSemester] <- tibble(Department = localDepartment,  :
-          #   number of items to replace is not a multiple of replacement length
 
-          #rv$offeredCourses[localSemester] <- tibble(
-          theRevisedCoursesOffered[localSemester] <- tibble(
-            Department = localDepartment,
-            Course=localCourse,
-            Description = localDescription,
-            semester = localSemester,
-            instructor = localInstructor,
-            courseID = localCourseID,
-            section = localSection,
-            W = localW,
-            C = localC,
-            OL = localOL,
-            H = localH,
-            SA = localSA
-          )
-        } else {
-          #theCoursesOffered[[localSemester]] <- isolate(theCoursesOffered)[[localSemester]] %>%
-          #rv$offeredCourses[[localSemester]] <- isolate(rv$offeredCourses)[[localSemester]] %>%
-          theRevisedCoursesOffered[[localSemester]] %>%
-            add_row(Department = localDepartment,
-                    Course = localCourse,
-                    Description = localDescription,
-                    semester = localSemester,
-                    instructor = localInstructor,
-                    courseID = localCourseID,
-                    section = localSection,
-                    W = localW,
-                    C = localC,
-                    OL = localOL,
-                    H = localH,
-                    SA = localSA) %>%
-            arrange(Department, courseID, section)
-        }
-        #print(dim(theMasterCourses))
-        #observe({vals$masterCourses <- theMasterCourses})
-        # observeEvent(input$txtInput1, {
-        #   toReturn$fam <- input$txtInput1
-        #   toReturn$text2 <- input$text2
-        #   toReturn$text1 <- input$txtInput1
-        #   toReturn$trigger <- ifelse(is.null(toReturn$trigger), 0, toReturn$trigger) + 1
-        # })
+
+        ###################################################
+        # The code below handles the ocData               #
+        # which is currently not used in this             #
+        # app.  Commented out to test what happens if it  #
+        # is not done.                                    #
+        ###################################################
+
+        # theRevisedCoursesOffered <- theCoursesOffered()
+        # browser()
+        # if(is.null(theRevisedCoursesOffered[localSemester][[1]])){
+        #   #create the dataframe for this.
+        #   # Make sure that it is being added appropriately to rv$offeredCourses.
+        #   #  Get this warning:
+        #   # Warning in rv$offeredCourses[localSemester] <- tibble(Department = localDepartment,  :
+        #   #   number of items to replace is not a multiple of replacement length
+        #
+        #   #rv$offeredCourses[localSemester] <- tibble(
+        #   theRevisedCoursesOffered[[localSemester]] <- tibble(
+        #     Department = localDepartment,
+        #     Course=localCourse,
+        #     Description = localDescription,
+        #     semester = localSemester,
+        #     instructor = localInstructor,
+        #     courseID = localCourseID,
+        #     section = localSection,
+        #     W = localW,
+        #     C = localC,
+        #     OL = localOL,
+        #     H = localH,
+        #     SA = localSA
+        #   )
+        # } else {
+        #   theRevisedCoursesOffered[[localSemester]] %>%
+        #     add_row(Department = localDepartment,
+        #             Course = localCourse,
+        #             Description = localDescription,
+        #             semester = localSemester,
+        #             instructor = localInstructor,
+        #             courseID = localCourseID,
+        #             section = localSection,
+        #             W = localW,
+        #             C = localC,
+        #             OL = localOL,
+        #             H = localH,
+        #             SA = localSA) %>%
+        #     arrange(Department, courseID, section)
+        # }
+
         toReturn$mcData <- theRevisedMasterCourses
         toReturn$combinedData <- theRevisedCombinedData
-        toReturn$ocData <- theRevisedCoursesOffered
+        # toReturn$ocData <- theRevisedCoursesOffered
         removeModal()
       })
       observeEvent(input$deleteSectionCommit, {
@@ -505,20 +514,34 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         } else {
           new.sectionNum <- seq(max(as.numeric(unlist(existing.sections)))+1, (max(as.numeric(unlist(existing.sections)))+numSections))
         }
+# print(names(theFaculty()))
+# browser()
+        # instructorList <- theFaculty() %>%
+        #   mutate(Faculty=factor(Faculty)) %>%
+        #   gather_("semester", "code", names(.)[-1]) %>%
+        #   mutate(Faculty=as.character(Faculty)) %>%
+        #   left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
+        #   filter(semester == convertSemester(isolate(input$theSemester1), inSemesterCodes)) %>%
+        #   filter(!is.na(code)) %>%
+        #   select("Faculty") %>%
+        #   arrange(Faculty) %>%
+        #   unlist() %>%
+        #   as.vector() %>%
+        #   fix.names() %>%
+        #   c("Unassigned")
 
         instructorList <- theFaculty() %>%
-          mutate(Faculty=factor(Faculty)) %>%
-          gather_("semester", "code", names(.)[-1]) %>%
-          mutate(Faculty=as.character(Faculty)) %>%
-          left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
-          filter(semester == convertSemester(isolate(input$theSemester1), inSemesterCodes)) %>%
-          filter(!is.na(code)) %>%
+          pivot_longer(cols=!Faculty, names_to="semester",
+                       values_to="code", values_drop_na=TRUE) %>%
+          filter(semester != "recnum") %>%
+          mutate(semester=toupper(semester)) %>%
+          filter(semester==convertSemester(isolate(input$theSemester1), inSemesterCodes)) %>%
           select("Faculty") %>%
-          arrange(Faculty) %>%
           unlist() %>%
           as.vector() %>%
           fix.names() %>%
           c("Unassigned")
+
 
         t.out <- lapply(1:(numSections), function(i) {
           list(

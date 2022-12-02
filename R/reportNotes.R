@@ -98,10 +98,16 @@ reportNotesModuleServer <- function(id, input, output, session, inSemester, theN
 
         observeEvent(input$submitAddNote, {
 
+          #Determine the next record number
+          print(theNotes())
+          nextRecordNumber <- max(theNotes()[,1])+1
+
           theRevisedNotesData <- theNotes() %>%
-            add_row(semester=input$noteSemester,
+            add_row(recnum=nextRecordNumber,
+                    semester=input$noteSemester,
                     note=input$noteText,
                     source=input$noteSource)
+
           toReturn$notes <- theRevisedNotesData
           removeModal()
         })

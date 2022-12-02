@@ -4,7 +4,15 @@
 \alias{fullSchedulingBoxModuleServer}
 \title{fullSchedulingBoxModuleServer}
 \usage{
-fullSchedulingBoxModuleServer(id, input, output, session, schedulingDataBundle)
+fullSchedulingBoxModuleServer(
+  id,
+  input,
+  output,
+  session,
+  schedulingDataBundle,
+  boxArrangement = "classic",
+  allowUpdateDB
+)
 }
 \arguments{
 \item{id}{The element id}
@@ -16,6 +24,10 @@ fullSchedulingBoxModuleServer(id, input, output, session, schedulingDataBundle)
 \item{session}{The session}
 
 \item{schedulingDataBundle}{The entire dataset}
+
+\item{boxArrangement}{the arrangement}
+
+\item{allowUpdateDB}{allow update of remote database.}
 }
 \description{
 fullSchedulingBoxModuleServer

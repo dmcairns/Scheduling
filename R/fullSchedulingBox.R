@@ -405,58 +405,18 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         cat(green("The leave data has been changed1.\n"))
 
         if(!is.null(modifiedData2$leaveData)){
-          cat(red("leaveData is modified\n"))
+          cat(red("leaveData is modified1\n"))
           if(allowUpdate){
             saveRDS(modifiedData2$leaveData, ".//Data//facultyLeave.rds")
           }
           if(allowUpdateDB){
-            #determine difference between existing leave data
-            #and that stored on the DB.
-            #browser()
-            query <- "SELECT * FROM faculty_leave"
-            leaveData <- DBI::dbGetQuery(dbConn, sql(query))
-            newData <- anti_join(modifiedData2$leaveData, leaveData, by=names(leaveData)[1])
-            newData <- unique(newData)
-            names(newData) <- tolower(names(newData)) # is this necessary?  UIN is all caps on the DB
-            newData <- newData %>%
-              rename("UIN"="uin")  # is the order correct?
-
-            if(nrow(newData)>0){
-              #proceed with adding a record to the remote DB
-
-              dbWriteTable(dbConn, "faculty_leave", newData, append=TRUE, row.names = FALSE)
-              t.data <- DBI::dbGetQuery(dbConn, sql(query))
-            } else {
-              cat(red("Can't do two leave actions in the same session.\nThis is when a leave record is removed.  No way to do this yet.\n"))
-              newData <- anti_join(leaveData, modifiedData2$leaveData, by=names(leaveData)[1])
-              if(nrow(newData) > 0) {
-
-                # proceed with deleting a record from the remote DB
-                update_statement <- paste0("DELETE FROM faculty_leave WHERE recnum = '", newData$recnum,"'")
-                dbSendQuery(dbConn, update_statement)
-                # probably need to update leaveData here
-              } else {
-                # proceed with editing a record in the remote DB
-                cat(red("Can't do two leave actions in the same session.\nThis is when a leave record is edited.  No way to do this yet.\n"))
-                recordsWithChanges <- anti_join(modifiedData2$leaveData, leaveData)
-                if(nrow(recordsWithChanges)>0){
-                  for(i in 1:nrow(recordsWithChanges)){
-                    # update each element
-                    update_statement <- paste0("UPDATE faculty_leave SET
-                                              faculty = '", recordsWithChanges$faculty[i], "', ",
-                                              "UIN = '", recordsWithChanges$UIN[i], "', ",
-                                              "semester = '", recordsWithChanges$semester[i], "', ",
-                                              "leavetype = '", recordsWithChanges$leavetype[i], "' ",
-                                              "WHERE recnum = '", recordsWithChanges$recnum[i], "'")
-                    dbSendQuery(dbConn, update_statement)
-                  }
-                }
-              }
-            }
-
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData2$leaveData,
+                                tableName="faculty_leave",
+                                key="recnum")
           }
-        #   theRVData$leaveData <- modifiedData2$leaveData
         }
+        theRVData$leaveData <- modifiedData2$leaveData
       })
       observeEvent(modifiedData$combinedData, {
         #cat(yellow("[App] modifiedData$combinedData changed\n"))

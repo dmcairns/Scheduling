@@ -22,5 +22,7 @@ Imports:
     shinydashboardPlus,
     shinyjs,
     stringr,
-    tidyr
+    tidyr,
+    DBI,
+    dbplyr
 RoxygenNote: 7.2.1

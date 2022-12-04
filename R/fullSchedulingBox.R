@@ -238,53 +238,10 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           saveRDS(theRVData$mcData, ".//Data//master.courses.rds")
         }
         if(allowUpdateDB){
-          #determine difference between existing master_courses data
-          #and that stored on the DB.
-          #browser()
-          query <- "SELECT * FROM master_courses"
-          masterCourses <- DBI::dbGetQuery(dbConn, sql(query))
-          newData <- anti_join(theRVData$mcData, masterCourses, by=names(masterCourses)[1])
-          newData <- unique(newData)
-          names(newData) <- tolower(names(newData))
-          #browser()
-          if(nrow(newData)>0){
-            #proceed with adding a record to the remote DB
-
-            dbWriteTable(dbConn, "master_courses", newData, append=TRUE, row.names = FALSE)
-            t.data <- DBI::dbGetQuery(dbConn, sql(query))
-          } else {
-            newData <- anti_join(masterCourses, theRVData$mcData, by=names(masterCourses)[1])
-            if(nrow(newData) > 0) {
-
-              # proceed with deleting a record from the remote DB
-              update_statement <- paste0("DELETE FROM master_courses WHERE recnum = '", newData$recnum,"'")
-              dbSendQuery(dbConn, update_statement)
-            } else {
-              # proceed with editing a record in the remote DB
-              recordsWithChanges <- anti_join(theRVData$mcData, masterCourses)
-              for(i in 1:nrow(recordsWithChanges)){
-                # update each element
-                update_statement <- paste0("UPDATE master_courses SET department = '", recordsWithChanges$Department[i], "', ",
-                                           "course = '", recordsWithChanges$Course[i], "', ",
-                                           "description = '", recordsWithChanges$Description[i], "', ",
-                                           "semester = '", recordsWithChanges$semester[i], "'. ",
-                                           "instructor = '", recordsWithChanges$instructor[i], "', ",
-                                           "courseid = '", recordsWithChanges$courseid[i], "', ",
-                                           "section = ", recordsWithChanges$section[i], ", ",
-                                           "w = ", recordsWithChanges$w[i], ", ",
-                                           "c = ", recordsWithChanges$c[i], ", ",
-                                           "ol = ", recordsWithChanges$ol[i], ", ",
-                                           "h = ", recordsWithChanges$h[i], ", ",
-                                           "sa = ", recordsWithChanges$sa[i], ", ",
-                                           "stacked = '", recordsWithChanges$stacked[i], "', ",
-                                           "load.contribution = ", recordsWithChanges$load.contribution[i], ", ",
-                                           "faculty = '", recordsWithChanges$faculty[i], "' ",
-                                           "WHERE recnum = '", recordsWithChanges$recnum[i], "'")
-                dbSendQuery(dbConn, update_statement)
-              }
-            }
-          }
-
+          modifyRemoteDBTable(dbConn,
+                              inData= modifiedData$mcData,
+                              tableName="master_courses",
+                              key="recnum")
         }
       })
       observeEvent(modifiedData1$mcData, {
@@ -295,53 +252,10 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           saveRDS(theRVData$mcData, ".//Data//master.courses.rds")
         }
         if(allowUpdateDB){
-          #determine difference between existing master_courses data
-          #and that stored on the DB.
-          #browser()
-          query <- "SELECT * FROM master_courses"
-          masterCourses <- DBI::dbGetQuery(dbConn, sql(query))
-          newData <- anti_join(theRVData$mcData, masterCourses, by=names(masterCourses)[1])
-          newData <- unique(newData)
-          names(newData) <- tolower(names(newData))
-          #browser()
-          if(nrow(newData)>0){
-            #proceed with adding a record to the remote DB
-
-            dbWriteTable(dbConn, "master_courses", newData, append=TRUE, row.names = FALSE)
-            t.data <- DBI::dbGetQuery(dbConn, sql(query))
-          } else {
-            newData <- anti_join(masterCourses, theRVData$mcData, by=names(masterCourses)[1])
-            if(nrow(newData) > 0) {
-
-              # proceed with deleting a record from the remote DB
-              update_statement <- paste0("DELETE FROM master_courses WHERE recnum = '", newData$recnum,"'")
-              dbSendQuery(dbConn, update_statement)
-            } else {
-              # proceed with editing a record in the remote DB
-              recordsWithChanges <- anti_join(theRVData$mcData, masterCourses)
-              for(i in 1:nrow(recordsWithChanges)){
-                # update each element
-                update_statement <- paste0("UPDATE master_courses SET department = '", recordsWithChanges$Department[i], "', ",
-                                           "course = '", recordsWithChanges$Course[i], "', ",
-                                           "description = '", recordsWithChanges$Description[i], "', ",
-                                           "semester = '", recordsWithChanges$semester[i], "'. ",
-                                           "instructor = '", recordsWithChanges$instructor[i], "', ",
-                                           "courseid = '", recordsWithChanges$courseid[i], "', ",
-                                           "section = ", recordsWithChanges$section[i], ", ",
-                                           "w = ", recordsWithChanges$w[i], ", ",
-                                           "c = ", recordsWithChanges$c[i], ", ",
-                                           "ol = ", recordsWithChanges$ol[i], ", ",
-                                           "h = ", recordsWithChanges$h[i], ", ",
-                                           "sa = ", recordsWithChanges$sa[i], ", ",
-                                           "stacked = '", recordsWithChanges$stacked[i], "', ",
-                                           "load.contribution = ", recordsWithChanges$load.contribution[i], ", ",
-                                           "faculty = '", recordsWithChanges$faculty[i], "' ",
-                                           "WHERE recnum = '", recordsWithChanges$recnum[i], "'")
-                dbSendQuery(dbConn, update_statement)
-              }
-            }
-          }
-
+          modifyRemoteDBTable(dbConn,
+                              inData= modifiedData1$mcData,
+                              tableName="master_courses",
+                              key="recnum")
         }
       })
       observeEvent(modifiedData3$mcData, {
@@ -351,53 +265,10 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           saveRDS(theRVData$mcData, ".//Data//master.courses.rds")
         }
         if(allowUpdateDB){
-          #determine difference between existing master_courses data
-          #and that stored on the DB.
-          #browser()
-          query <- "SELECT * FROM master_courses"
-          masterCourses <- DBI::dbGetQuery(dbConn, sql(query))
-          newData <- anti_join(theRVData$mcData, masterCourses, by=names(masterCourses)[1])
-          newData <- unique(newData)
-          names(newData) <- tolower(names(newData))
-          #browser()
-          if(nrow(newData)>0){
-            #proceed with adding a record to the remote DB
-
-            dbWriteTable(dbConn, "master_courses", newData, append=TRUE, row.names = FALSE)
-            t.data <- DBI::dbGetQuery(dbConn, sql(query))
-          } else {
-            newData <- anti_join(masterCourses, theRVData$mcData, by=names(masterCourses)[1])
-            if(nrow(newData) > 0) {
-
-              # proceed with deleting a record from the remote DB
-              update_statement <- paste0("DELETE FROM master_courses WHERE recnum = '", newData$recnum,"'")
-              dbSendQuery(dbConn, update_statement)
-            } else {
-              # proceed with editing a record in the remote DB
-              recordsWithChanges <- anti_join(theRVData$mcData, masterCourses)
-              for(i in 1:nrow(recordsWithChanges)){
-                # update each element
-                update_statement <- paste0("UPDATE master_courses SET department = '", recordsWithChanges$Department[i], "', ",
-                                           "course = '", recordsWithChanges$Course[i], "', ",
-                                           "description = '", recordsWithChanges$Description[i], "', ",
-                                           "semester = '", recordsWithChanges$semester[i], "'. ",
-                                           "instructor = '", recordsWithChanges$instructor[i], "', ",
-                                           "courseid = '", recordsWithChanges$courseid[i], "', ",
-                                           "section = ", recordsWithChanges$section[i], ", ",
-                                           "w = ", recordsWithChanges$w[i], ", ",
-                                           "c = ", recordsWithChanges$c[i], ", ",
-                                           "ol = ", recordsWithChanges$ol[i], ", ",
-                                           "h = ", recordsWithChanges$h[i], ", ",
-                                           "sa = ", recordsWithChanges$sa[i], ", ",
-                                           "stacked = '", recordsWithChanges$stacked[i], "', ",
-                                           "load.contribution = ", recordsWithChanges$load.contribution[i], ", ",
-                                           "faculty = '", recordsWithChanges$faculty[i], "' ",
-                                           "WHERE recnum = '", recordsWithChanges$recnum[i], "'")
-                dbSendQuery(dbConn, update_statement)
-              }
-            }
-          }
-
+          modifyRemoteDBTable(dbConn,
+                              inData= modifiedData3$mcData,
+                              tableName="master_courses",
+                              key="recnum")
         }
       })
 
@@ -429,124 +300,34 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       })
       observeEvent(modifiedData2$combinedData, {
         cat(yellow("[App] modifiedData2$combinedData changed1\n"))
-        #browser()
+
         theRVData$combinedData <- modifiedData2$combinedData
-        storedNames <- names(theRVData$combinedData)
-        names(theRVData$combinedData) <- tolower(names(theRVData$combinedData))
-        #localCombinedData <- modifiedData2$combinedData
-        #names(localCombinedData) <- tolower(names(localCombinedData))
-        #browser()
+        # storedNames <- names(theRVData$combinedData)
+        # names(theRVData$combinedData) <- tolower(names(theRVData$combinedData))
         if(!is.null(modifiedData2$combinedData)){
           if(allowUpdateDB){
-            #determine difference between existing combinedData data
-            #and that stored on the DB.
-
-            query <- "SELECT * FROM combined_data"
-            combinedData <- DBI::dbGetQuery(dbConn, sql(query))
-            newData <- anti_join(theRVData$combinedData, combinedData, by=names(combinedData)[1])
-            #newData <- anti_join(localCombinedData, combinedData, by=names(combinedData)[1])
-            newData <- unique(newData)
-            names(newData) <- tolower(names(newData))
-            combinedData <- combinedData %>%
-              mutate(numericsemester=as.integer(numericsemester)) %>%
-              mutate(load=as.numeric(load))
-            if(nrow(newData)>0){
-              #proceed with adding a record to the remote DB
-
-              dbWriteTable(dbConn, "combined_data", newData, append=TRUE, row.names = FALSE)
-              t.data <- DBI::dbGetQuery(dbConn, sql(query))
-            } else {
-              newData <- anti_join(combinedData, theRVData$combinedData, by=names(combinedData)[1])
-              #newData <- anti_join(combinedData, localCombinedData, by=names(combinedData)[1])
-              if(nrow(newData) > 0) {
-
-                # proceed with deleting a record from the remote DB
-                update_statement <- paste0("DELETE FROM master_courses WHERE recnum = '", newData$recnum,"'")
-                dbSendQuery(dbConn, update_statement)
-              } else {
-                # proceed with editing a record in the remote DB 1
-                recordsWithChanges <- anti_join(theRVData$combinedData, combinedData)
-                #recordsWithChanges <- anti_join(localCombinedData, combinedData)
-                cat("past the join\n")
-                if(nrow(recordsWithChanges)>0){
-                  #browser()
-                  for(i in 1:nrow(recordsWithChanges)){
-                    # update each element
-                    # below works, but there is a problem with updating assigned.load.  I think it's because of the period in the name.
-                    update_statement <- paste0("UPDATE combined_data SET faculty = '", recordsWithChanges$faculty[i], "', ",
-                                               "shortname = '", recordsWithChanges$shortname[i], "', ",
-                                               "shortnamenospace = '", recordsWithChanges$shortnamenospace[i], "', ",
-                                               "longsemester = '", recordsWithChanges$longsemester[i], "', ",
-                                               "shortsemester = '", recordsWithChanges$shortsemester[i], "', ",
-                                               "numericsemester = '", recordsWithChanges$numericsemester[i], "', ",
-                                               "sem2 = '", recordsWithChanges$sem2[i], "', ",
-                                               "rank = ", recordsWithChanges$rank[i], ", ",
-                                               "load = ", recordsWithChanges$load[i], " ",
-                                               "WHERE recnum = '", recordsWithChanges$recnum[i], "'")
-                    dbSendQuery(dbConn, update_statement)
-                  }
-                }
-              }
-            }
-
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData2$combinedData,
+                                tableName="combined_data",
+                                key="recnum")
           }
-          names(theRVData$combinedData) <- storedNames
         }
         if(!is.null(modifiedData2$afData)){
+          if(allowUpdateDB){
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData2$afData,
+                                tableName="available_faculty",
+                                key="recnum")
+          }
           theRVData$afData <- modifiedData2$afData
         }
         if(!is.null(modifiedData2$mcData)){
           theRVData$mcData <- modifiedData2$mcData
           if(allowUpdateDB){
-            #determine difference between existing master_courses data
-            #and that stored on the DB.
-            #browser()
-            query <- "SELECT * FROM master_courses"
-            masterCourses <- DBI::dbGetQuery(dbConn, sql(query))
-            newData <- anti_join(theRVData$mcData, masterCourses, by=names(masterCourses)[1])
-            newData <- unique(newData)
-            names(newData) <- tolower(names(newData))
-            #browser()
-            if(nrow(newData)>0){
-              #proceed with adding a record to the remote DB
-
-              dbWriteTable(dbConn, "master_courses", newData, append=TRUE, row.names = FALSE)
-              t.data <- DBI::dbGetQuery(dbConn, sql(query))
-            } else {
-              newData <- anti_join(masterCourses, theRVData$mcData, by=names(masterCourses)[1])
-              if(nrow(newData) > 0) {
-
-                # proceed with deleting a record from the remote DB
-                update_statement <- paste0("DELETE FROM master_courses WHERE recnum = '", newData$recnum,"'")
-                dbSendQuery(dbConn, update_statement)
-              } else {
-                # proceed with editing a record in the remote DB 1
-                recordsWithChanges <- anti_join(theRVData$mcData, masterCourses)
-                if(nrow(recordsWithChanges)>0){
-                  for(i in 1:nrow(recordsWithChanges)){
-                    # update each element
-                    update_statement <- paste0("UPDATE master_courses SET department = '", recordsWithChanges$Department[i], "', ",
-                                               "course = '", recordsWithChanges$Course[i], "', ",
-                                               "description = '", recordsWithChanges$Description[i], "', ",
-                                               "semester = '", recordsWithChanges$semester[i], "'. ",
-                                               "instructor = '", recordsWithChanges$instructor[i], "', ",
-                                               "courseid = '", recordsWithChanges$courseid[i], "', ",
-                                               "section = ", recordsWithChanges$section[i], ", ",
-                                               "w = ", recordsWithChanges$w[i], ", ",
-                                               "c = ", recordsWithChanges$c[i], ", ",
-                                               "ol = ", recordsWithChanges$ol[i], ", ",
-                                               "h = ", recordsWithChanges$h[i], ", ",
-                                               "sa = ", recordsWithChanges$sa[i], ", ",
-                                               "stacked = '", recordsWithChanges$stacked[i], "', ",
-                                               "load.contribution = ", recordsWithChanges$load.contribution[i], ", ",
-                                               "faculty = '", recordsWithChanges$faculty[i], "' ",
-                                               "WHERE recnum = '", recordsWithChanges$recnum[i], "'")
-                    dbSendQuery(dbConn, update_statement)
-                  }
-                }
-              }
-            }
-
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData2$mcData,
+                                tableName="master_courses",
+                                key="recnum")
           }
         }
       })
@@ -554,6 +335,15 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       observeEvent(modifiedData$afData, {
         #cat(yellow("[App] modifiedData$afData changed\n"))
         theRVData$afData <- modifiedData$afData
+        if(!is.null(modifiedData$afData)){
+          if(allowUpdateDB){
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData$afData,
+                                tableName="available_faculty",
+                                key="recnum")
+          }
+          theRVData$afData <- modifiedData$afData
+        }
       })
 
       observeEvent(modifiedNotes$notes, {
@@ -562,37 +352,11 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           saveRDS(theRVData$notes, ".//Data//schedulingNotes.rds")
         }
         if(allowUpdateDB){
-          #determine difference between existing schedulingNotes data
-          #and that stored on the DB.
-          query <- "SELECT * FROM scheduling_notes"
-          schedulingNotes <- DBI::dbGetQuery(dbConn, sql(query))
-          newData <- anti_join(theRVData$notes, schedulingNotes, by=names(schedulingNotes)[1])
-          if(nrow(newData)>0){
-            #proceed with adding a record to the remote DB
-            dbWriteTable(dbConn, "scheduling_notes", newData, append=TRUE, row.names = FALSE)
-            t.data <- DBI::dbGetQuery(dbConn, sql(query))
-          } else {
-              newData <- anti_join(schedulingNotes, theRVData$notes, by=names(schedulingNotes)[1])
-              if(nrow(newData) > 0) {
-                # proceed with deleting a record from the remote DB
-                update_statement <- paste0("DELETE FROM scheduling_notes WHERE recnum = ", newData$recnum)
-                dbSendQuery(dbConn, update_statement)
-              } else {
-                # proceed with editing a record in the remote DB
-                recordsWithChanges <- anti_join(theRVData$notes, schedulingNotes)
-                for(i in 1:nrow(recordsWithChanges)){
-                  # update each element
-                  update_statement <- paste0("UPDATE scheduling_notes SET semester = '", recordsWithChanges$semester[i], "', ",
-                                             "note = '", recordsWithChanges$note[i], "', ",
-                                             "source = '", recordsWithChanges$source[i], "' ",
-                                             "WHERE recnum = ", recordsWithChanges$recnum[i])
-                  dbSendQuery(dbConn, update_statement)
-                }
-              }
-          }
-
+          modifyRemoteDBTable(dbConn,
+                              inData= modifiedNotes$notes,
+                              tableName="scheduling_notes",
+                              key="recnum")
         }
-
       })
 
       #cat(yellow("[fullSchedulingBoxModuleServer]"), green("Before modules\n"))

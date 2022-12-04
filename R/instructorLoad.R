@@ -339,7 +339,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         #   reducedFacultyData                          #
         #################################################
 
-
+        #browser()
 
         # fix the width of each column
         # Rotate column titles for semesters
@@ -361,7 +361,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           filter(longSemester==lastSemester) %>%
           select(current) %>%
           pull(current)
-
+cat("something\n")
         loadTableData <- theCombinedData() %>%
           filter(numericSemester >= firstSemesterIndex) %>%
           filter(numericSemester <= lastSemesterIndex) %>%
@@ -903,7 +903,7 @@ cat(green("Creating new.rank\n"))
               TRUE ~ rank
             )) %>%
             naniar::replace_with_na(replace=list(rank=-9999)) %>%
-            select("Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester", "sem2", "rank", "load", "assigned.load")
+            select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester", "sem2", "rank", "load", "assigned.load")
 
           revisedCombinedData <- revisedCombinedData %>%
             mutate(load=case_when(
@@ -931,6 +931,8 @@ cat(green("Creating new.rank\n"))
           toReturn$combinedData <- revisedCombinedData
           toReturn$leaveData <- modifiedLeaveData
           toReturn$afData <- modifiedAvailableFaculty
+          cat("watch point\n")
+          #browser()
           removeModal()
         }, ignoreInit=TRUE, once=FALSE)  #The once=TRUE argument keeps the observer from being triggered multiple times.
 

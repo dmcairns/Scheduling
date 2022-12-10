@@ -292,11 +292,25 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       observeEvent(modifiedData$combinedData, {
         #cat(yellow("[App] modifiedData$combinedData changed\n"))
         theRVData$combinedData <- modifiedData$combinedData
+        if(!is.null(modifiedData$combinedData)){
+          if(allowUpdateDB){
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData$combinedData,
+                                tableName="combined_data",
+                                key="recnum")
+          }
+        }
       })
       observeEvent(modifiedData1$combinedData, {
-        #cat(yellow("[App] modifiedData1$combinedData changed\n"))
-        #cat(red("here\n"))
         theRVData$combinedData <- modifiedData1$combinedData
+        if(!is.null(modifiedData1$combinedData)){
+          if(allowUpdateDB){
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData1$combinedData,
+                                tableName="combined_data",
+                                key="recnum")
+          }
+        }
       })
       observeEvent(modifiedData2$combinedData, {
         cat(yellow("[App] modifiedData2$combinedData changed1\n"))
@@ -312,17 +326,27 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                                 key="recnum")
           }
         }
-        if(!is.null(modifiedData2$afData)){
-          if(allowUpdateDB){
-            modifyRemoteDBTable(dbConn,
-                                inData= modifiedData2$afData,
-                                tableName="available_faculty",
-                                key="recnum")
-          }
-          theRVData$afData <- modifiedData2$afData
-        }
+
+        ########################################
+        # The code below is commented out because #
+        # I don't think afData is really necessary #
+        # it has been included in the combinedData #
+        ############################################
+
+        # if(!is.null(modifiedData2$afData)){
+        #   if(allowUpdateDB){
+        #     browser()
+        #     modifyRemoteDBTable(dbConn,
+        #                         inData= modifiedData2$afData,
+        #                         tableName="available_faculty",
+        #                         key="recnum")
+        #   }
+        #   theRVData$afData <- modifiedData2$afData
+        # }
+
         if(!is.null(modifiedData2$mcData)){
           theRVData$mcData <- modifiedData2$mcData
+          #browser()
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData2$mcData,
@@ -330,10 +354,10 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                                 key="recnum")
           }
         }
+        cat(yellow("[App] end of modifiedData2$combinedData oberverer.\n"))
       })
 
       observeEvent(modifiedData$afData, {
-        #cat(yellow("[App] modifiedData$afData changed\n"))
         theRVData$afData <- modifiedData$afData
         if(!is.null(modifiedData$afData)){
           if(allowUpdateDB){

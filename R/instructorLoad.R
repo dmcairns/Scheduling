@@ -281,19 +281,24 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             select("semester4") %>%
             unlist()
 
+          ########################################################
+          # the reducedFacultyData are not used in this module   #
+          # confirm that they are not used and then delete       #
+          # 12/8/2022                                            #
+          ########################################################
 
-          reducedFacultyData <- theAvailableFacultyData() %>%
-            pivot_longer(cols=!Faculty, names_to="semester",
-                         values_to="code", values_drop_na=TRUE) %>%
-            filter(semester != "recnum") %>%
-            mutate(semester=toupper(semester)) %>%
-            left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
-            filter(semester >= targetBegin) %>%
-            filter(semester <= targetEnd) %>%
-            arrange(Faculty) %>%
-            pull() %>%
-            fix.names() %>%
-            c("Unassigned")
+          # reducedFacultyData <- theAvailableFacultyData() %>%
+          #   pivot_longer(cols=!Faculty, names_to="semester",
+          #                values_to="code", values_drop_na=TRUE) %>%
+          #   filter(semester != "recnum") %>%
+          #   mutate(semester=toupper(semester)) %>%
+          #   left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
+          #   filter(semester >= targetBegin) %>%
+          #   filter(semester <= targetEnd) %>%
+          #   arrange(Faculty) %>%
+          #   pull() %>%
+          #   fix.names() %>%
+          #   c("Unassigned")
         }
 
 
@@ -303,8 +308,14 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
 
         if(!is.null(input$theSemester10BeginNew)){
 
-          numRows <- length(unique(reducedFacultyData$Faculty))
-          numCols <- length(unique(reducedFacultyData$semester))+1   #The +1 is for the faculty name column
+          ########################################################
+          # the numRows and numCols are not used in this module  #
+          # confirm that they are not used and then delete       #
+          # 12/8/2022                                            #
+          ########################################################
+
+          # numRows <- length(unique(reducedFacultyData$Faculty))
+          # numCols <- length(unique(reducedFacultyData$semester))+1   #The +1 is for the faculty name column
           t.out <- tagList(
             dataTableOutput(ns("buildGridNewDTCombined"))
           )
@@ -361,7 +372,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           filter(longSemester==lastSemester) %>%
           select(current) %>%
           pull(current)
-cat("something\n")
+
         loadTableData <- theCombinedData() %>%
           filter(numericSemester >= firstSemesterIndex) %>%
           filter(numericSemester <= lastSemesterIndex) %>%
@@ -491,6 +502,7 @@ cat("something\n")
             #     rv$available.faculty                          #
             #     rv$loads                                      #
             #####################################################
+            #browser()
             modifiedAvailableFaculty <- theRevisedCombinedData %>%
               select("Faculty", "shortSemester", "rank") %>%
               pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
@@ -697,27 +709,16 @@ cat("something\n")
             #     rv$available.faculty                          #
             #     rv$loads                                      #
             #####################################################
-
+            #browser()
             modifiedAvailableFaculty <- theRevisedCombinedData %>%
               select("Faculty", "shortSemester", "rank") %>%
               pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
-
-            #cat("turnOffAF:", turnOffAF, "\n")
-            # if(!turnOffAF){
-            #   rv$available.faculty <- rv$combinedData %>%
-            #     select("Faculty", "shortSemester", "rank") %>%
-            #     pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
-            #
-            #   rv$loads <- rv$combinedData %>%
-            #     mutate(Faculty=shortName) %>%
-            #     mutate(semester=longSemester) %>%
-            #     select("Faculty", "semester", "load")
-            # }
           } else {
             cat("Duplicate Faculty Name.  Not Added!\n")
           }
 
           toReturn$combinedData <- theRevisedCombinedData
+          #browser()
           toReturn$afData <- modifiedAvailableFaculty
 
           removeModal()
@@ -768,7 +769,20 @@ cat("something\n")
 
 
       observeEvent(input$lastClickAvailableFacultyName1, {
+        cat(yellow("In observeEvent(input$lastClickAvailableFacultyName1\n"))
+
+        #########################################
+        # This is what is triggered when        #
+        # the name of the faculty is clicked    #
+        # Opens a modal window to allow edit of #
+        #                                       #
+        # 1) Faculty Name
+        # 2) Rank
+        # 3) Addition of Leave                  #
+        #########################################
+
         observeEvent(input$submitNewName,{
+          #browser()
           createShortFacultyName <- function(newLongName){
             #convert newLongName to a short name
             newShortName <- gsub(",.*$", "", newLongName)
@@ -792,57 +806,17 @@ cat("something\n")
             newShortName
           }
 
-          updateRank <- function(data, t.fac, inSemester, inIndex, newRank){
-            cat(red("Entering updateRank.  \n"))
-            cat(blue("t.fac:", t.fac, "\n"))
-            cat(blue("inSemester:", inSemester, "\n"))
-            cat(blue("index:", inIndex, "\n"))
-            cat(blue("newRank:", newRank, "\n"))
-            #browser()
-            t.sems <- semester.codes %>%
-              mutate(sem4.code=paste0("20", current.code))
-            #assign("t.data2", data, pos=1)
-            t.junk <- data %>%
-              pivot_longer(-Faculty, names_to="sem4", values_to="rank1") %>%
-              left_join(t.sems, by=c("sem4"="sem4.code")) %>%
-              select("Faculty", "sem4", "rank1", "index") #%>%
-            # mutate(rank1=case_when(Faculty==t.fac & index>=inIndex & !is.na(rank1)  ~ newRank,
-            #                        TRUE ~ rank1)) %>%
-            # assign("t.junk2", t.junk, pos=1)
-            cat("!!!!!!!!!!!!!!!!Before the mutate\n")
-            t.junk <- t.junk %>%
-              mutate(rank1=case_when(((Faculty==t.fac) & (index>=inIndex)) ~ as.character(newRank),
-                                     TRUE ~ rank1)) %>%
-
-              select("Faculty", "sem4", "rank1") %>%
-              pivot_wider(id_cols=Faculty, names_from=sem4, values_from=rank1)
-            # assign("t.junk4", t.junk, pos=1)
-            #probably need to rebuild instructors here.
-            #cat("t.fac:", t.fac, "inSemester:", inSemester, "\n")
-            recordExists <- rv$loads %>%
-              filter(Faculty==fix.names(t.fac)) %>%
-              filter(semester == inSemester)
-
-            cat("recordExists:", nrow(recordExists), "\n")
-            if(nrow(recordExists)==0){
-              #add a record to the rv$loads for this faculty member and this semester
-              cat("********************Adding a record for:", t.fac, "\n")
-              t.testing <- rv$loads %>%
-                add_row(Faculty=fix.names(t.fac), load=NA, semester=inSemester)
-            }
-            #assign("t.testing", t.testing, pos=1)
-
-            cat(red("Leaving updateRank.\n"))
-            t.junk
-          }
-
           updatedName <- input$fName
           theExistingName <- toReturn$oldFacultyName
           if(updatedName==""){
-
             updatedName <- theExistingName
           }
+#browser()
 
+          ################################################
+          # Update faculty name (Faculty) in             #
+          # revisedCombinedData                          #
+          ################################################
           if(theExistingName != updatedName){
             revisedCombinedData <- theCombinedData() %>%
               mutate(Faculty=case_when(
@@ -856,6 +830,13 @@ cat("something\n")
 
           new.rank <- c(NULL)
 
+          #################################################
+          # Code below is messy for determining new.rank  #
+          # Doesn't work for weird faculty names (like    #
+          # those with () in the name).  Create a short-  #
+          # term fix, but eventually rework this code     #
+          #################################################
+
           for(i in 1:length(displayedSemesters)){
             inSemNoSpace <- inSemesterCodes %>%
               filter(longSemester==displayedSemesters[i]) %>%
@@ -863,10 +844,17 @@ cat("something\n")
               select("semNoSpace") %>%
               unlist() %>%
               as.vector()
-cat(green("Creating new.rank\n"))
+
             new.rank <- c(new.rank, isolate(input[[paste0("facultyRankSelect_", unlist(fixNamesNoSpace(fix.names(theExistingName))), "_", inSemNoSpace)]]))
 
           }  #End of for loop
+          if(is.null(new.rank)){
+            # rank is not changed.  Set new.rank = existing rank.
+            new.rank <- revisedCombinedData %>%
+              filter(Faculty == updatedName) %>%
+              filter(longSemester %in% displayedSemesters) %>%
+              pull(rank)
+          }
 
           #cat(yellow("before smallData\n"))
           #convert displayedSemesters to shortSemester format
@@ -875,7 +863,6 @@ cat(green("Creating new.rank\n"))
             select("sem4") %>%
             unlist() %>%
             as.vector()
-#browser()
 
           smallData <- data.frame(Faculty=updatedName, shortSemester=displayedSemestersShort, rank=as.integer(new.rank),  stringsAsFactors = FALSE)
 
@@ -886,38 +873,68 @@ cat(green("Creating new.rank\n"))
             select("Faculty", "shortSemester", "new.rank", "numericSemester"="current", "sem2"="current.code", "longSemester")
 
           duplicateLastNames <- c("Guneralp", "Bednarz")
-#browser()
+
+
+          ####################################################
+          # Fix shortName and shortNameNoSpace               #
+          # only needs to be run after a name is edited, but #
+          # for now, do it for all conditions.               #
+          ####################################################
+
           revisedCombinedData <- revisedCombinedData %>%
-            #mutate(numericSemester=as.character(numericSemester)) %>%
-            full_join(tTemp, by=c("Faculty", "shortSemester", "numericSemester", "sem2", "longSemester")) %>%
-            mutate(numericSemester=as.numeric(numericSemester)) %>%
+            mutate(numericSemester=as.integer(numericSemester)) %>%
             mutate(shortName=createShortFacultyName(Faculty)) %>%
             mutate(shortNameNoSpace=str_trim(shortName)) %>%
             mutate(shortNameNoSpace=case_when((shortName %in% duplicateLastNames) ~ createShortFacultyNameNoSpace(Faculty),
                                               TRUE ~ shortName)) %>%
             mutate(shortName=case_when((shortName %in% duplicateLastNames) ~ createShortFacultyName2People(Faculty),
-                                       TRUE ~ shortName)) %>%
-            mutate(rank=as.integer(rank)) %>%
-            mutate(rank=case_when(
-              !is.na(new.rank) ~ new.rank,
-              TRUE ~ rank
-            )) %>%
-            naniar::replace_with_na(replace=list(rank=-9999)) %>%
-            select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester", "sem2", "rank", "load", "assigned.load")
+                                       TRUE ~ shortName))
 
+          ####################################################
+          # Update the rank in revisedCombinedData           #
+          # using data from tTemp                            #
+          ####################################################
+          if(nrow(tTemp)>0){
+            revisedCombinedData <- revisedCombinedData %>%
+              full_join(tTemp, by=c("Faculty", "shortSemester", "numericSemester", "sem2", "longSemester")) %>%
+              mutate(numericSemester=as.integer(numericSemester)) %>%
+              mutate(shortName=createShortFacultyName(Faculty)) %>%
+              mutate(shortNameNoSpace=str_trim(shortName)) %>%
+              mutate(shortNameNoSpace=case_when((shortName %in% duplicateLastNames) ~ createShortFacultyNameNoSpace(Faculty),
+                                                TRUE ~ shortName)) %>%
+              mutate(shortName=case_when((shortName %in% duplicateLastNames) ~ createShortFacultyName2People(Faculty),
+                                         TRUE ~ shortName)) %>%
+              mutate(rank=as.integer(rank)) %>%
+              mutate(rank=case_when(
+                !is.na(new.rank) ~ new.rank,
+                TRUE ~ rank
+              )) %>%
+              naniar::replace_with_na(replace=list(rank=-9999)) %>%
+              select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester", "sem2", "rank", "load", "assigned.load")
+          }
+
+          #browser()
           revisedCombinedData <- revisedCombinedData %>%
             mutate(load=case_when(
-              is.na(rank) ~ NA_real_,
-              TRUE ~ as.numeric(load)
+              is.na(rank) ~ NA_integer_,
+              TRUE ~ as.integer(load)
             ))
 
-
+#browser()
+################################
+# check to see if differences between
+# theMasterCourses() and revisedMasterCourses
+# shouldn't be, except when there is a name change.
+##################################
           revisedMasterCourses <- theMasterCourses() %>%
             mutate(Faculty=case_when(instructor == createShortFacultyName(theExistingName) ~ createShortFacultyName(updatedName),
                                      TRUE ~ instructor))
+
           modifiedAvailableFaculty <- revisedCombinedData %>%
             select("Faculty", "shortSemester", "rank") %>%
-            pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
+            pivot_wider(Faculty, names_from=shortSemester, values_from=rank) %>%
+            mutate(recnum=row_number()) %>%
+            select("recnum", "Faculty", starts_with("20"))
 
           modifiedLeaveData <- theLeaveData() %>%
             mutate(faculty=case_when(faculty == createShortFacultyName(theExistingName) ~ createShortFacultyName(updatedName),
@@ -931,17 +948,15 @@ cat(green("Creating new.rank\n"))
           toReturn$combinedData <- revisedCombinedData
           toReturn$leaveData <- modifiedLeaveData
           toReturn$afData <- modifiedAvailableFaculty
-          cat("watch point\n")
-          #browser()
+          toReturn$afData <- NULL # testing code to see if afData matters
+
           removeModal()
         }, ignoreInit=TRUE, once=FALSE)  #The once=TRUE argument keeps the observer from being triggered multiple times.
 
         dataModal <- function(inFacultyMemberName) {
           ns <- session$ns
           rankDisplayFunction <- function(inSem, inFacultyMemberName){
-            #cat(yellow("[rankDisplayFunction] inFacultyMemberName:", inFacultyMemberName, "\n"))
-            #cat(yellow("[rankDisplayFunction] inSem:", inSem, "\n"))
-            #browser()
+
             facultyRankSelect <- theCombinedData() %>%
               filter(Faculty==inFacultyMemberName) %>%
               filter(longSemester==inSem) %>%
@@ -950,9 +965,6 @@ cat(green("Creating new.rank\n"))
                 TRUE ~ as.numeric(rank)
               )) %>%
               pull("rank")
-
-
-            #cat(yellow("[rankDisplayFunction] facultyRankSelect:", facultyRankSelect, "\n"))
 
             inSemNoSpace <- inSemesterCodes %>%
               filter(longSemester==inSem) %>%
@@ -1027,11 +1039,10 @@ cat(green("Creating new.rank\n"))
           filter(index>= beginSemesterIndex) %>%
           filter(index <= endSemesterIndex) %>%
           pull("longSemester")
-
-#browser()
         showModal(dataModal(inFaculty))
       })
       observeEvent(input$lastClickAvailableFaculty1 ,{
+        cat(yellow("In observeEvent(input$lastClickAvailable1\n"))
         t.elements <- unlist(strsplit(input$lastClickAvailableFacultyId, "_"))
         inFaculty <- t.elements[2]
         inSemester <- t.elements[3]

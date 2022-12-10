@@ -22,7 +22,10 @@
 modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
   #determine difference between inData and the
   #remote data table.
-
+  # if(tableName=="combined_data") {
+  #   cat(green("browsing master_courses\n"))
+  #   browser()
+  # }
   query <- paste0("SELECT * FROM ", tableName)
   remoteData <- DBI::dbGetQuery(dbConn, sql(query))
   newData <- anti_join(inData, remoteData, by=key)
@@ -46,16 +49,26 @@ modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
         for(i in 1:nrow(recordsWithChanges)){
           # update each element
           statementPrefix <- paste0("UPDATE ", tableName, " SET ")
-          statementSuffix <- paste0("WHERE \"", key, "\" = '", recordsWithChanges[,key], "'")
+          statementSuffix <- paste0("WHERE \"", key, "\" = '", recordsWithChanges[i,key], "'")
           theFields <- names(recordsWithChanges)
           theFields <- setdiff(theFields, key)
           update_statement <- statementPrefix
           for(j in 1:length(theFields)){
-            update_statement <- paste0(update_statement, "\"", theFields[j], "\" = '", recordsWithChanges[i, theFields[j]], "'")
+            #update_statement <- paste0(update_statement, "\"", theFields[j], "\" = '", recordsWithChanges[i, theFields[j]], "'")
+            update_statement <- paste0(update_statement, "\"", theFields[j], "\"=")
+            if(!is.na(recordsWithChanges[i, theFields[j]])){
+              update_statement <- paste0(update_statement,"'", recordsWithChanges[i, theFields[j]], "'")
+            } else {
+              update_statement <- paste0(update_statement, "NULL")
+            }
             if(j < length(theFields)){
               update_statement <- paste0(update_statement, ", ")
             }
           }
+          # if(tableName=="combined_data") {
+          #   cat(green("browsing combined_data\n"))
+          #   browser()
+          # }
           update_statement <- paste(update_statement, statementSuffix)
           DBI::dbExecute(dbConn, update_statement)
         }

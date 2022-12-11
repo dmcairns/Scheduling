@@ -327,23 +327,6 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           }
         }
 
-        ########################################
-        # The code below is commented out because #
-        # I don't think afData is really necessary #
-        # it has been included in the combinedData #
-        ############################################
-
-        # if(!is.null(modifiedData2$afData)){
-        #   if(allowUpdateDB){
-        #     browser()
-        #     modifyRemoteDBTable(dbConn,
-        #                         inData= modifiedData2$afData,
-        #                         tableName="available_faculty",
-        #                         key="recnum")
-        #   }
-        #   theRVData$afData <- modifiedData2$afData
-        # }
-
         if(!is.null(modifiedData2$mcData)){
           theRVData$mcData <- modifiedData2$mcData
           #browser()
@@ -351,6 +334,17 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData2$mcData,
                                 tableName="master_courses",
+                                key="recnum")
+          }
+        }
+
+        if(!is.null(modifiedData2$facultyUIN)){
+          #theRVData$mcData <- modifiedData2$mcData
+          #browser()
+          if(allowUpdateDB){
+            modifyRemoteDBTable(dbConn,
+                                inData= modifiedData2$facultyUIN,
+                                tableName="faculty_uin",
                                 key="recnum")
           }
         }
@@ -440,7 +434,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                                                   theAvailableFacultyData=reactive(theRVData$afData),
                                                   inSemesterCodes=semester.codes,
                                                   allowUpdate=allowUpdate, rds.path=rds.path,
-                                                  facultyUINs=theRVData$facultyUINs)
+                                                  facultyUINs=reactive(theRVData$facultyUINs))
       #cat("Before reportNotesModuleServer\n")
       modifiedNotes <- reportNotesModuleServer("notes", inSemester=reactive(input$sidebarSemester),
                                                theNotes = reactive(theRVData$notes),

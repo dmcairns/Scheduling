@@ -665,21 +665,19 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         observeEvent(input$submitNewFaculty,{
           # create a new record from information in the modal window
           #      faculty name, rank, and dates of employment
-          # Add that information into the rv$available.faculty data
+          # Add that information into theCombinedData
+          # Also add the UIN to the facultyUINs data (make this reactive)
           # that are used to create the form.
-          #cat(green("submitNewFaculty button was pushed\n"))
-          #cat(green(paste0("input$theSemester11BeginNew:", input$theSemester11BeginNew), "\n"))
-          #print(input)
+
           beginSemester <- inSemesterCodes %>%
             filter(longSemester==input$theSemester11BeginNew) %>%
-            select("current") %>%
-            unlist()
-          #cat("beginSemester:", beginSemester, "\n")
+            pull(current)
+
 
           endSemester <- inSemesterCodes %>%
             filter(longSemester==input$theSemester11EndNew) %>%
-            select("current") %>%
-            unlist()
+            pull(current)
+
           if(length(endSemester)==0) {
             endSemester <- max(inSemesterCodes$current)
           }
@@ -691,8 +689,10 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             select("longSemester", "shortSemester", "numericSemester", "sem2") %>%
             unique()
 
-          #cat(green(paste0("newFacultyName:", input$newFacultyName,"\n")))
-          newData <- data.frame(Faculty=input$newFacultyName,
+
+          newRecNums <- seq(max(as.integer(theCombinedData()$recnum))+1, by=1, length.out=nrow(includeSemesters))
+          newData <- data.frame(recnum=newRecNums,
+                                Faculty=input$newFacultyName,
                                 shortName = unlist(fix.names(input$newFacultyName)),
                                 shortNameNoSpace = unlist(fixNamesNoSpace(fix.names(input$newFacultyName))),
                                 includeSemesters,
@@ -700,26 +700,39 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
                                 load=NA,
                                 assigned.load=NA)
 
+
+          nextRecNum <- max(facultyUINs()$recnum)+1
+
+
+          newUINData <- data.frame(recnum=nextRecNum,
+                                   faculty=input$newFacultyName,
+                                   displayName=unlist(fixNamesNoSpace(fix.names(input$newFacultyName))),
+                                   UIN=input$newFacultyUIN)
+
           allFaculty <- theCombinedData()$Faculty
           if(is.na(match(input$newFacultyName, allFaculty))){
 
             theRevisedCombinedData <- rbind(theCombinedData(), newData)
+            theRevisedUINs <- rbind(facultyUINs(), newUINData)
             #####################################################
             # For backward compatability, update:               #
             #     rv$available.faculty                          #
             #     rv$loads                                      #
             #####################################################
             #browser()
-            modifiedAvailableFaculty <- theRevisedCombinedData %>%
-              select("Faculty", "shortSemester", "rank") %>%
-              pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
+            # modifiedAvailableFaculty <- theRevisedCombinedData %>%
+            #   select("Faculty", "shortSemester", "rank") %>%
+            #   pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
           } else {
             cat("Duplicate Faculty Name.  Not Added!\n")
           }
 
+          #modifiedAvailableFaculty <- NULL  #availableFaculty is deprecated
+
           toReturn$combinedData <- theRevisedCombinedData
-          #browser()
-          toReturn$afData <- modifiedAvailableFaculty
+          toReturn$facultyUIN <- theRevisedUINs
+
+          #toReturn$afData <- modifiedAvailableFaculty
 
           removeModal()
         }, ignoreInit=TRUE, once=TRUE)  #The once=TRUE argument keeps the observer from being triggered multiple times.
@@ -733,11 +746,25 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         })
 
         dataModal2 <- function() {
+          ###########################################
+          # generate a temp UIN that is not already #
+          # contained within the facultyUINs        #
+          # tempUIN should be between 1000 and 9999 #
+          ###########################################
+
+          repeat{
+            tempUIN <- sample(c(1000:9999), 1)
+            if (!(tempUIN %in% facultyUINs())){
+              break
+            }
+          }
           ns <- session$ns
           modalDialog(
             textInput(ns("newFacultyName"), "Faculty Name",
                       placeholder = "Mouse, Minnie"
             ),
+            textInput(ns("newFacultyUIN"), "UIN",
+                      value = tempUIN),
             selectInput(ns("selectInsertFacultyID"), label="Rank",
                         choices=c("Asst Prof"=1,
                                   "Assoc Prof"=2,

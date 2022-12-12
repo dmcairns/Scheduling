@@ -39,9 +39,11 @@ modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
     # check for record deletion
     newData <- anti_join(remoteData, inData, by=key)
     if(nrow(newData) > 0) {
-      # proceed with deleting a record from the remote DB
-        update_statement <- paste0("DELETE FROM ", tableName, " WHERE ", key, " = '", newData[,key],"'")
+      # proceed with deleting records from the remote DB
+      for(i in 1:nrow(newData)){
+        update_statement <- paste0("DELETE FROM ", tableName, " WHERE ", key, " = '", newData[i,key],"'")
         DBI::dbSendQuery(dbConn, update_statement)  #Should this be dbExecute
+      }
     } else {
       # proceed with editing a record in the remote DB
         recordsWithChanges <- anti_join(inData, remoteData)

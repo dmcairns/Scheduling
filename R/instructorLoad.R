@@ -497,15 +497,18 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             theRevisedCombinedData <- theCombinedData() %>%
               filter(Faculty != input$selectRemoveFaculty)
 
+            theRevisedUINs <- facultyUINs() %>%
+              filter(faculty != input$selectRemoveFaculty)
+            #browser()
             #####################################################
             # For backward compatability, update:               #
             #     rv$available.faculty                          #
             #     rv$loads                                      #
             #####################################################
             #browser()
-            modifiedAvailableFaculty <- theRevisedCombinedData %>%
-              select("Faculty", "shortSemester", "rank") %>%
-              pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
+            # modifiedAvailableFaculty <- theRevisedCombinedData %>%
+            #   select("Faculty", "shortSemester", "rank") %>%
+            #   pivot_wider(Faculty, names_from=shortSemester, values_from=rank)
             # if(!turnOffAF){
             #   rv$available.faculty <- rv$combinedData %>%
             #     select("Faculty", "shortSemester", "rank") %>%
@@ -517,7 +520,8 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             #     select("Faculty", "semester", "load")
             # }
             toReturn$combinedData <- theRevisedCombinedData
-            toReturn$afData <- modifiedAvailableFaculty
+            toReturn$facultyUIN <- theRevisedUINs
+            # toReturn$afData <- modifiedAvailableFaculty
 
             removeModal()
           })
@@ -539,24 +543,27 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           ns <- session$ns
           beginSemesterNumeric <- theCombinedData() %>%
             filter(longSemester == input$theSemester10BeginNew) %>%
-            select("numericSemester") %>%
-            unique() %>%
-            unlist()
+            pull(numericSemester)
+            # select("numericSemester") %>%
+            # unique() %>%
+            # unlist()
           endSemesterNumeric <- theCombinedData() %>%
             filter(longSemester == input$theSemester10EndNew) %>%
-            select("numericSemester") %>%
-            unique() %>%
-            unlist()
+            pull(numericSemester)
+            # select("numericSemester") %>%
+            # unique() %>%
+            # unlist()
 
           facultyNames <- theCombinedData() %>%
             filter(numericSemester >= beginSemesterNumeric) %>%
             filter(numericSemester <= endSemesterNumeric) %>%
             filter(!is.na(rank)) %>%
             arrange(Faculty) %>%
-            select("Faculty") %>%
-            unique() %>%
-            unlist()
-
+            pull(Faculty)
+            # select("Faculty") %>%
+            # unique() %>%
+            # unlist()
+#browser()
           modalDialog(
             h4("Permanently remove a faculty member from the database."),
             selectInput(ns("selectRemoveFaculty"), label="Faculty",
@@ -673,7 +680,6 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             filter(longSemester==input$theSemester11BeginNew) %>%
             pull(current)
 
-
           endSemester <- inSemesterCodes %>%
             filter(longSemester==input$theSemester11EndNew) %>%
             pull(current)
@@ -681,7 +687,6 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           if(length(endSemester)==0) {
             endSemester <- max(inSemesterCodes$current)
           }
-          #cat("endSemester:", endSemester, "\n")
 
           includeSemesters <- theCombinedData() %>%
             filter(numericSemester >= beginSemester) %>%
@@ -711,7 +716,6 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
 
           allFaculty <- theCombinedData()$Faculty
           if(is.na(match(input$newFacultyName, allFaculty))){
-
             theRevisedCombinedData <- rbind(theCombinedData(), newData)
             theRevisedUINs <- rbind(facultyUINs(), newUINData)
             #####################################################
@@ -793,8 +797,6 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         showModal(dataModal2())
 
       }, ignoreInit=TRUE, once=FALSE)
-
-
       observeEvent(input$lastClickAvailableFacultyName1, {
         cat(yellow("In observeEvent(input$lastClickAvailableFacultyName1\n"))
 

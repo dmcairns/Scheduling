@@ -210,39 +210,24 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
       # Observers                 #
       #############################
       observeEvent(input$changedInstructorNameValue, {
-        #cat(green("input$changedInstructorNameValue:", input$changedInstructorNameValue, "\n"))
 
         t.courseID <- substr(input$instructorNameID, 6,12)
         t.section <- gsub(".*[_]([^.]+)[_].*", "\\1", input$instructorNameID)
         t.sem <- substr(input$instructorNameID, nchar(input$instructorNameID)-2, nchar(input$instructorNameID))
-        #cat("the courseID:", t.courseID, "\n")
-        #cat("the section:", t.section, "\n")
-        #cat("the semester:", t.sem, "\n")
-        #cat("new instructor:", input$changedInstructorNameValue, "\n")
-        #cat(red("updating instructor\n"))
-        #cat(names(theMasterCourses()), "\n")
+
         theRevisedMasterCourses <- updateInstructor(t.courseID, t.section, t.sem, theMasterCourses(), input$changedInstructorNameValue)
-        # t.bishopCourses <- theRevisedMasterCourses %>%
-        #   filter(semester==inSemester()) %>%
-        #   filter(instructor=="Bishop") %>%
-        #   nrow()
-        #cat(blue("[instructorAssisgnment Module]: t.bishopCourses", t.bishopCourses, "\n"))
-        #cat("************** After updateInstructor ***************\n")
-        #cat(names(theRevisedMasterCourses), "\n")
-        # the text below allows for combinedData to be updated (assigned.loads) each time an instructor is
-        # changed.
+
         t.assignedLoads <- theRevisedMasterCourses %>%
           group_by(instructor, semester) %>%
           summarise(assigned.load=sum(load.contribution), .groups="drop")
 
         t.printLoads <- t.assignedLoads %>%
           filter(semester==inSemester())
-        # print(t.printLoads)
 
         theCombinedData <- theCombinedData() %>%
           left_join(t.assignedLoads, by=c("shortName"="instructor", "longSemester"="semester")) %>%
           mutate(assigned.load=assigned.load.y) %>%
-          select("Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
+          select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
                  "sem2", "rank", "load", "assigned.load")
         toReturn$mcData <- theRevisedMasterCourses
         toReturn$combinedData <- theCombinedData

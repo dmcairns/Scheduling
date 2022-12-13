@@ -510,18 +510,12 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           new.sectionNum <- seq(max(as.numeric(unlist(existing.sections)))+1, (max(as.numeric(unlist(existing.sections)))+numSections))
         }
 
-        instructorList <- theFaculty() %>%
-          pivot_longer(cols=!Faculty, names_to="semester",
-                       values_to="code", values_drop_na=TRUE) %>%
-          filter(semester != "recnum") %>%
-          mutate(semester=toupper(semester)) %>%
-          filter(semester==convertSemester(isolate(input$theSemester1), inSemesterCodes)) %>%
-          select("Faculty") %>%
-          unlist() %>%
-          as.vector() %>%
-          fix.names() %>%
-          c("Unassigned")
-
+        instructorList <- theCombinedData() %>%
+          filter(longSemester==t.sem1) %>%
+          filter(!is.na(rank)) %>%
+          pull(Faculty) %>%
+          sort()
+        instructorList <- c(instructorList, "Unassigned")
 
         t.out <- lapply(1:(numSections), function(i) {
           list(

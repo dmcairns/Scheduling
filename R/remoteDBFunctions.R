@@ -26,6 +26,7 @@ modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
   #   cat(green("browsing master_courses\n"))
   #   browser()
   # }
+  #browser()
   query <- paste0("SELECT * FROM ", tableName)
   remoteData <- DBI::dbGetQuery(dbConn, sql(query))
   newData <- anti_join(inData, remoteData, by=key)

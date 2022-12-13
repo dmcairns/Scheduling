@@ -164,11 +164,9 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
       })
       observeEvent(input$insertSectionCommit, {
         # when this button is hit, add the new data into the master.course data.frame
-        cat("In commit\n")
-        numNewSections <- 1
-        #localMasterCourses <- isolate(rv$master.courses)
 
-        #localMasterCourses <- isolate(theMasterCourses())
+        numNewSections <- 1
+
         ###################################################
         # For each added section, need the following:     #
         #     Department                                  #
@@ -224,9 +222,7 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
 
         theRevisedMasterCourses <- theMasterCourses()
         nextRecNum <- max(as.numeric(theRevisedMasterCourses$recnum))+1
-        # theRevisedMasterCourses <- theRevisedMasterCourses %>%
-        #   mutate(nr=as.numeric(recnum))
-#        theRevisedMasterCourses <- theMasterCourses() %>%
+
         theRevisedMasterCourses <- theRevisedMasterCourses %>%
           add_row(recnum = as.character(nextRecNum),
                   Department = as.character(localDepartment),
@@ -253,10 +249,9 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           summarise(assigned.load=sum(load.contribution), .groups="drop")
 
         theRevisedCombinedData <- theCombinedData() %>%
-          #rv$combinedData <<- isolate(rv$combinedData) %>%
           left_join(t.assignedLoads, by=c("shortName"="instructor", "longSemester"="semester")) %>%
           mutate(assigned.load=assigned.load.y) %>%
-          select("Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
+          select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
                  "sem2", "rank", "load", "assigned.load")
 
 
@@ -514,21 +509,6 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         } else {
           new.sectionNum <- seq(max(as.numeric(unlist(existing.sections)))+1, (max(as.numeric(unlist(existing.sections)))+numSections))
         }
-# print(names(theFaculty()))
-# browser()
-        # instructorList <- theFaculty() %>%
-        #   mutate(Faculty=factor(Faculty)) %>%
-        #   gather_("semester", "code", names(.)[-1]) %>%
-        #   mutate(Faculty=as.character(Faculty)) %>%
-        #   left_join(inSemesterCodes, by=c("semester"="semester4")) %>%
-        #   filter(semester == convertSemester(isolate(input$theSemester1), inSemesterCodes)) %>%
-        #   filter(!is.na(code)) %>%
-        #   select("Faculty") %>%
-        #   arrange(Faculty) %>%
-        #   unlist() %>%
-        #   as.vector() %>%
-        #   fix.names() %>%
-        #   c("Unassigned")
 
         instructorList <- theFaculty() %>%
           pivot_longer(cols=!Faculty, names_to="semester",

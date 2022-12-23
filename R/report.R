@@ -152,6 +152,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           t.output
         }
         create.textboxes <- function(data, data.summary, i){
+          #browser()
           courses.found <- find.courses(data, data.summary, i)
           numCourses <- dim(courses.found)[1]
           t.out <- lapply(1:(numCourses), function(j) {
@@ -168,6 +169,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             # courses just means that they haven't been assigned yet.
 
             t.load <- theCombinedData() %>%
+              mutate(shortName=displayName) %>%
               filter(shortName == instructor.of.interest) %>%
               #filter(longSemester == inSemester()) %>%
               filter(longSemester == input$theSemester1) %>%
@@ -340,7 +342,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
 
         cat(blue("dim(semester.data):", dim(semester.data), "\n"))
         cat(blue("displayedInstructors:", displayedInstructors, "\n"))
-
+#browser()
         if(dim(semester.data)[1] == 0){
           t.out <- h4("No courses are scheduled to be taught this term.  Add courses using the Course Selection tab.", style="color: red")
         } else{
@@ -349,7 +351,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             summarise(num.assignments=n(), .groups="drop")
 
           summary.info <- theCombinedData() %>%
-            #filter(longSemester == inSemester()) %>%
+            mutate(shortName=displayName) %>%
             filter(longSemester == input$theSemester1) %>%
             filter(!is.na(rank)) %>%
             select("instructor"="shortName", "rank", "load", "assigned.load") %>%
@@ -376,10 +378,10 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           IDs <- seq_len(nrow(semester.data))
           numInstructors <- dim(summary.info)[1]
           cat(yellow("numInstructors:", numInstructors, "\n"))
-
+          #browser()
           t.out <- lapply(1:(numInstructors), function(i) {
             # determine load level (OK, overload, underload), assign to css.courseLoadStatus
-
+            #browser()
             contracted.load <- summary.info %>%
               filter(instructor==t.summary.info$instructor[i]) %>%
               select(load) %>%

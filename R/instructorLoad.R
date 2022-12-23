@@ -544,15 +544,11 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           beginSemesterNumeric <- theCombinedData() %>%
             filter(longSemester == input$theSemester10BeginNew) %>%
             pull(numericSemester)
-            # select("numericSemester") %>%
-            # unique() %>%
-            # unlist()
+
           endSemesterNumeric <- theCombinedData() %>%
             filter(longSemester == input$theSemester10EndNew) %>%
             pull(numericSemester)
-            # select("numericSemester") %>%
-            # unique() %>%
-            # unlist()
+
 
           facultyNames <- theCombinedData() %>%
             filter(numericSemester >= beginSemesterNumeric) %>%
@@ -560,10 +556,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             filter(!is.na(rank)) %>%
             arrange(Faculty) %>%
             pull(Faculty)
-            # select("Faculty") %>%
-            # unique() %>%
-            # unlist()
-#browser()
+
           modalDialog(
             h4("Permanently remove a faculty member from the database."),
             selectInput(ns("selectRemoveFaculty"), label="Faculty",
@@ -1034,12 +1027,25 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             unlist() %>%
             as.character() %>%
             unique()
+          #browser()
+          if(!is.null(toReturn$facultyUIN)){
+            facultyMemberUIN <- toReturn$facultyUIN %>%
+              filter(displayName==inFacultyMemberName) %>%
+              pull(UIN)
+          } else {
+          facultyMemberUIN <- facultyUINs() %>%
+            filter(displayName==inFacultyMemberName) %>%
+            pull(UIN)
+          }
           cat("facultyMemberName:", facultyMemberName, "\n")
           toReturn$oldFacultyName <- facultyMemberName
           modalDialog(
             textInput(ns("fName"), "Edit Name",
                       placeholder = facultyMemberName
             ),
+            textInput(ns("fUIN"), "UIN",
+                      value=facultyMemberUIN
+                      ),
             tagList(
               lapply(displayedSemesters, FUN=rankDisplayFunction, inFacultyMemberName=facultyMemberName)
             ),
@@ -1125,6 +1131,39 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         if(allowUpdate){
           saveRDS(rv$combinedData, file=".//Data//combinedData.rds")
         }
+      })
+      observeEvent(input$fUIN, {
+        cat(blue("UIN changed\n"))
+        #browser()
+        t.elements <- unlist(strsplit(input$lastClickAvailableFacultyNameId, "_"))
+        inFacultyMemberName <- t.elements[2]
+
+        originalUIN <- facultyUINs() %>%
+          filter(displayName==inFacultyMemberName) %>%
+          pull(UIN)
+        # originalUIN is always blank for faculty that are not included in facultyUINs
+        # like VAP (Physical 1)
+        if(length(originalUIN)==0){
+          cat("The original UIN is blank.\n")
+          # This is a hack to handle conditions where there
+          # is a name for a faculty member, but no UIN.  This
+          # probably will not be necessary after the initial clean up
+          # of the data.
+          tempUIN <- as.character(sample(1:100, 1))
+          originalUIN <- tempUIN
+          theRevisedUINs <- facultyUINs() %>%
+            mutate(UIN=case_when(UIN=="" ~ tempUIN,
+                                 TRUE ~ UIN))
+        } else {
+          theRevisedUINs <- facultyUINs()
+        }
+        newUIN <- input$fUIN
+
+        theRevisedUINs <- theRevisedUINs %>%
+          mutate(UIN=case_when(UIN==originalUIN ~ newUIN,
+                               TRUE ~ UIN))
+        toReturn$facultyUIN <- theRevisedUINs
+
       })
       observeEvent(input$leaveButton, {
         observeEvent(input$confirmLeave, {

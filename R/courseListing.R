@@ -223,6 +223,11 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         theRevisedMasterCourses <- theMasterCourses()
         nextRecNum <- max(as.numeric(theRevisedMasterCourses$recnum))+1
 
+        theUIN <- theCombinedData() %>%
+          filter(displayName==localInstructor) %>%
+          pull(UIN) %>%
+          unique()
+
         theRevisedMasterCourses <- theRevisedMasterCourses %>%
           add_row(recnum = as.character(nextRecNum),
                   Department = as.character(localDepartment),
@@ -236,7 +241,11 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
                   C = localC,
                   OL = localOL,
                   H = localH,
-                  SA = localSA)
+                  SA = localSA,
+                  stacked = NA,
+                  locad.contribution=1,
+                  Faculty=instructor,
+                  UIN=theUIN)
 
         cat("Added course to master.courses\n")
         cat(green("nrow(theMasterCourses):", nrow(theRevisedMasterCourses), "\n"))
@@ -252,7 +261,7 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           left_join(t.assignedLoads, by=c("shortName"="instructor", "longSemester"="semester")) %>%
           mutate(assigned.load=assigned.load.y) %>%
           select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
-                 "sem2", "rank", "load", "assigned.load")
+                 "sem2", "rank", "load", "assigned.load", "displayName", "UIN")
 
 
         # if there are no courses scheduled for localSemester, then the following will throw

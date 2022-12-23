@@ -160,15 +160,24 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
         t.df <- dataForSemesterOfInterest
 
         #browser()
+        # original code
+        # theInstructorsNew <- theCombinedData() %>%
+        #   filter(shortSemester==convertSemester(theSemester)) %>%
+        #   filter(!is.na(rank)) %>%
+        #   select(shortName) %>%
+        #   add_row(shortName="Unassigned") %>%
+        #   unlist() %>%
+        #   as.character() %>%
+        #   sort()
+
         theInstructorsNew <- theCombinedData() %>%
           filter(shortSemester==convertSemester(theSemester)) %>%
           filter(!is.na(rank)) %>%
-          select(shortName) %>%
-          add_row(shortName="Unassigned") %>%
+          select(displayName) %>%
+          add_row(displayName="Unassigned") %>%
           unlist() %>%
           as.character() %>%
           sort()
-
         t.df <- t.df %>%
           mutate(OL1=case_when(
             (.[["OL"]]==TRUE) ~ paste0('<input type="checkbox" id=OL',"_",.$courseID,'_', .$section,"_",sem.code, ' value=', .$OL, ' checked=checked>'),
@@ -229,7 +238,7 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
           left_join(t.assignedLoads, by=c("shortName"="instructor", "longSemester"="semester")) %>%
           mutate(assigned.load=assigned.load.y) %>%
           select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
-                 "sem2", "rank", "load", "assigned.load")
+                 "sem2", "rank", "load", "assigned.load", "displayName", "UIN")
         toReturn$mcData <- theRevisedMasterCourses
         toReturn$combinedData <- theCombinedData
 
@@ -283,9 +292,20 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
           unlist() %>%
           as.character()
 
+        new.UIN <- theCombinedData() %>%
+          filter(displayName==new.instructor) %>%
+          pull(UIN) %>%
+          unique()
+
+        browser()
         t.mc <- t.mc %>%
           mutate(instructor = case_when((courseID==t.courseID) & (semester==t.sem1) & (section==t.section) ~ new.instructor,
-                                        TRUE ~ instructor))
+                                        TRUE ~ instructor)) %>%
+          mutate(Faculty = case_when((courseID==t.courseID) & (semester==t.sem1) & (section==t.section) ~ new.instructor,
+                                     TRUE ~Faculty)) %>%
+          mutate(UIN = case_when((courseID==t.courseID) & (semester==t.sem1) & (section==t.section) ~ new.UIN,
+                                 TRUE ~ UIN))
+
         #cat(green("Leaving updateInstructor\n"))
         t.mc
 

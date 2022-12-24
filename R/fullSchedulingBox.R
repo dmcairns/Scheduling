@@ -318,6 +318,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         theRVData$combinedData <- modifiedData2$combinedData
         # storedNames <- names(theRVData$combinedData)
         # names(theRVData$combinedData) <- tolower(names(theRVData$combinedData))
+        #browser()
         if(!is.null(modifiedData2$combinedData)){
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,

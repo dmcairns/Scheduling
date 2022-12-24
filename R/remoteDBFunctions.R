@@ -23,12 +23,19 @@ modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
   #determine difference between inData and the
   #remote data table.
   # if(tableName=="combined_data") {
-  #   cat(green("browsing master_courses\n"))
+  #   cat(green("browsing combined_data\n"))
   #   browser()
   # }
+
   #browser()
   query <- paste0("SELECT * FROM ", tableName)
   remoteData <- DBI::dbGetQuery(dbConn, sql(query))
+  if(tableName == "combined_data") {
+    inData <- inData %>%
+      mutate(load=as.double(load))
+    remoteData <- remoteData %>%
+      mutate(load=as.double(load))
+  }
   newData <- anti_join(inData, remoteData, by=key)
   newData <- unique(newData)
 

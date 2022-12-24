@@ -894,7 +894,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             left_join(inSemesterCodes, by=c("shortSemester"="semester4")) %>%
             select("Faculty", "shortSemester", "new.rank", "numericSemester"="current", "sem2"="current.code", "longSemester")
 
-          duplicateLastNames <- c("Guneralp", "Bednarz")
+          duplicateLastNames <- c("Guneralp", "Bednarz", "Zhang")
 
 
           ####################################################
@@ -932,7 +932,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
                 TRUE ~ rank
               )) %>%
               naniar::replace_with_na(replace=list(rank=-9999)) %>%
-              select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester", "sem2", "rank", "load", "assigned.load")
+              select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester", "sem2", "rank", "load", "assigned.load", "displayName", "UIN")
           }
 
           #browser()
@@ -1028,16 +1028,24 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             as.character() %>%
             unique()
           #browser()
+          localFacultyMemberName <- theCombinedData() %>%
+            filter(shortNameNoSpace==inFacultyMemberName) %>%
+            pull(displayName) %>%
+            unique()
+
           if(!is.null(toReturn$facultyUIN)){
             facultyMemberUIN <- toReturn$facultyUIN %>%
-              filter(displayName==inFacultyMemberName) %>%
+              #filter(displayName==inFacultyMemberName) %>%
+              filter(displayName==localFacultyMemberName) %>%
               pull(UIN)
           } else {
           facultyMemberUIN <- facultyUINs() %>%
-            filter(displayName==inFacultyMemberName) %>%
+            #filter(displayName==inFacultyMemberName) %>%
+            filter(displayName==localFacultyMemberName) %>%
             pull(UIN)
           }
           cat("facultyMemberName:", facultyMemberName, "\n")
+          cat("facultyMemberUIN:", facultyMemberUIN, "\n")
           toReturn$oldFacultyName <- facultyMemberName
           modalDialog(
             textInput(ns("fName"), "Edit Name",
@@ -1058,6 +1066,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           )
         }
 
+        #browser()
         t.elements <- unlist(strsplit(input$lastClickAvailableFacultyNameId, "_"))
         inFaculty <- t.elements[2]
 
@@ -1094,13 +1103,15 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           as.character()
         inShortFacultyNameWithInitial <- theCombinedData() %>%
           filter(shortNameNoSpace == inFaculty) %>%
-          select("shortName") %>%
+          #select("shortName") %>%
+          select("displayName") %>%
           unlist() %>%
           unique() %>%
           as.character()
 
         existingLoad <- theCombinedData() %>%
-          filter(shortName==inShortFacultyNameWithInitial) %>%
+          #filter(shortName==inShortFacultyNameWithInitial) %>%
+          filter(displayName==inShortFacultyNameWithInitial) %>%
           filter(longSemester==inSemesterLong) %>%
           select("load") %>%
           pull(load) %>%
@@ -1311,7 +1322,10 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           t.first <- gsub('.*,\\s*','', in.data)
           t.first <- substr(t.first, 1,1)
 
-          if((t.substr=="Bednarz")|(t.substr=="Guneralp"))
+          lastName <- t.substr
+          # determine which faculty have duplicate last names
+          #
+          if((t.substr=="Bednarz")|(t.substr=="Guneralp")|(t.substr=="Zhang"))
             t.out <- paste0(t.first, ". ", t.substr)
           else
             t.out <- t.substr

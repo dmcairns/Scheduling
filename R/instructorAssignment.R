@@ -159,17 +159,6 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
           as.character()
         t.df <- dataForSemesterOfInterest
 
-        #browser()
-        # original code
-        # theInstructorsNew <- theCombinedData() %>%
-        #   filter(shortSemester==convertSemester(theSemester)) %>%
-        #   filter(!is.na(rank)) %>%
-        #   select(shortName) %>%
-        #   add_row(shortName="Unassigned") %>%
-        #   unlist() %>%
-        #   as.character() %>%
-        #   sort()
-
         theInstructorsNew <- theCombinedData() %>%
           filter(shortSemester==convertSemester(theSemester)) %>%
           filter(!is.na(rank)) %>%

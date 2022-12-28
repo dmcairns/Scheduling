@@ -1,0 +1,685 @@
+.thingHolder {
+  background-color: #c92297;
+}
+
+@font-face {
+  src: url('https://mdn.mozillademos.org/files/16044/AmstelvarAlpha-VF.ttf');
+  font-family:'AmstelvarAlpha';
+  font-style: normal;
+}
+
+.display thead tr th {
+  text-align: center;
+}
+.box-body .row {
+  margin-left: -5px;
+  margin-right: 5px;
+}
+.aBoxBodyC3Background {
+  background-color: #D6D3C4;
+  padding: 1%;
+}
+.aBoxBodyDTBackground {
+  background-color: #D6D3C4;
+  padding: 1%;
+}
+.aBoxContainerDiv .box-solid {
+  padding-top: 15px;
+}
+
+.aBoxContainerDiv .box-header{
+  background-color: #500000;
+}
+
+.aBoxContainerDiv .box-title{
+  color: #FFFFFF;
+}
+.schBoxTestOct{
+  background: #500000 !important;
+}
+
+
+.dropdown{
+  margin-top: 0 !important;
+}
+.dashboardPlotCard{
+  /*position:relative;  */ /*Don't do this. */
+  background-color: #D6D3C4;
+  /*background-color: #d6bdce;*/
+  outline: 2px black solid;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-bottom: 2%;
+  margin: 2%;
+  min-height: 10px;
+  overflow-y: hidden;
+}
+
+.individualPieHeader {
+  /*background-color: #cdc3d5;*/
+  padding-top: 10%;
+  text-align: center; 
+  color: #500000;
+  font-family: "Arial", Helvetica, sans-serif;
+  font-size: 14pt;
+  
+}
+/**********************************************************/
+/*                                                        */
+/*  Styles for box based cards with right sidebar         */
+/*  Modifications for shinyDashboardPlus package          */
+/*                                                        */
+/**********************************************************/
+
+.col-sm-12 {  /* probably not necessary */
+  margin: 0;
+}
+
+.dashboardPlotCard .direct-chat {
+  background-color: #D6D3C4;
+}
+.dashboardPlotCard .box .box-body .direct-chat-contacts {
+  /*This controls the characteristics of the right sidebar */
+  background-color: #998542;
+}
+/*.dashboardPlotCard .box .box-body .direct-chat-contacts .box { */
+.direct-chat-contacts .box {
+  background-color: #500000;
+}
+.direct-chat .box-header .btn-box-tool {
+  float: right;
+  color: #500000;
+}
+
+.direct-chat .box-body .btn-box-tool {
+  color: #FFFFFF;
+}
+.direct-chat-contacts .contacts-list .shiny-bound-output .box {
+  width: 75%;
+  margin-bottom: 0;
+}
+.direct-chat-contacts .contacts-list .shiny-bound-output .box .box-header {
+  color: #FFFFFF;
+}
+.box-title .shiny-input-container {
+  display: inline-block;
+  padding-left: 10px;
+  margin: 0;
+  
+}
+.box-title .shiny-input-container .checkbox {
+  
+  margin: 0;
+  padding-bottom: 0;
+}
+.box .box-header .btn-group{
+  width: 62%;
+}
+
+.box .box-warning {
+  border-top-color: #998542;
+}
+.dropdown-menu .menu {
+  padding-left: 0;
+}
+.dropdown-toggle {
+  float: right !important;
+}
+.dropdown-toggle .label-danger {
+  background-color: #5be34f !important;
+}
+.multiColumnBannerComponentSidebar{
+  height: auto;
+  -webkit-column-count: 4; /* Chrome, Safari, Opera */ 
+  -moz-column-count: 4;    /* Firefox */ 
+  -ms-column-count: 4;
+  column-count: 6; 
+  -webkit-column-fill: auto;
+  -moz-column-fill: auto;
+  column-fill: auto; 
+  margin-top: 0;
+
+}
+
+.multiColumnBannerComponentSidebar .shiny-bound-output .control-label { 
+  margin-bottom: 0;
+  margin-top: 0;
+  color: #5be34f;
+  visibility: hidden;
+  
+  
+} 
+.multiColumnBannerComponentSidebar .shiny-bound-output .radio {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+
+/**********************************************************/
+/*                                                        */
+/*  Styles for tables in personnel module.                */
+/*                                                        */
+/**********************************************************/
+
+.employmentTableGrid {
+  padding-left: 2%;
+  padding-right: 5%;
+}
+
+.employmentTableGrid .dataTable thead th {
+  background-color: #D6D3C4;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+/*************************************************/
+.plotControlsAndBody{
+  position: relative;
+}
+.plotBodyContainer{
+  position: relative;
+  /*background-color: #554635;*/
+  background-color: #D6D3C4;
+  z-index: 2;
+}
+
+/*.plotControlMenu{*/
+.controlInputDiv{
+  background-color: #35553d;
+  position: absolute;
+  /*left: 0px; */
+  top: 0; 
+  width: 100%;
+  z-index: 1;
+  /* padding-left: 2%;
+  padding-right: 2%; */
+  
+}
+.plotBodyContainer .shiny-bound-output .tabbable .nav-tabs .active >a{
+  background-color: #500000;
+  color: #FFFFFF;
+}
+.extraDivTestClass{
+  background-color: #500000;
+  color: #FFFFFF;
+  position: absolute;
+  left:0;
+  width: 100%;
+  z-index: 4;
+}
+.bannerDivClass{
+  background-color: #998542;
+  position: absolute;
+  left:0;
+  width: 100%;
+  z-index: 1;
+}
+
+.multiColumnBannerComponent{
+  display: inline-block;
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 50%;
+  /*-webkit-column-count: 4; *//* Chrome, Safari, Opera */ 
+  /*-moz-column-count: 4;   */ /* Firefox */ 
+  /*-webkit-column-count: 3;
+  -ms-column-count: 3;
+  column-count: 4; 
+  -moz-column-fill: auto;
+  -column-fill: auto; */
+}
+
+.multiColumnBannerComponent .shiny-options-group { 
+  height: auto;
+  -webkit-column-count: 4; /* Chrome, Safari, Opera */ 
+  -moz-column-count: 4;    /* Firefox */ 
+  -ms-column-count: 4;
+  column-count: 4; 
+  /* -webkit-column-fill: balance;
+  -moz-column-fill: balance;
+  column-fill: balance; */
+  -webkit-column-fill: auto;
+  -moz-column-fill: auto;
+  column-fill: auto; 
+  margin-top: 0;
+} 
+
+
+.multiColumnBannerComponent .shiny-options-group .control-label { 
+  margin-bottom: 0;
+  margin-top: 0;
+  
+} 
+.multiColumnBannerComponent .shiny-options-group .radio {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.Column2BannerComponent .shiny-options-group { 
+  height: auto;
+  display: inline-block;
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 40%;
+  -webkit-column-count: 2; /* Chrome, Safari, Opera */ 
+  -moz-column-count: 2;    /* Firefox */ 
+  -ms-column-count: 2;
+  column-count: 2; 
+  -webkit-column-fill: auto;
+  -moz-column-fill: auto;
+  column-fill: auto; 
+  margin-top: 0;
+} 
+
+.Column2BannerComponent .shiny-options-group .control-label { 
+  margin-bottom: 0;
+  margin-top: 0;
+  
+} 
+.Column2BannerComponent .shiny-options-group .radio {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.bannerComponentDefunct{
+  display: inline-block;
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 25%;
+}
+.bannerComponent{
+  padding-left: 2%;
+  padding-right: 2%;
+  background-color: #998542;
+  
+}
+.sidebarComponent2021{
+  background-color: #500000;
+  color:#FFFFFF;
+  padding-top: 10%;
+}
+.bannerComponentNew{
+  /*display: inline-block;*/
+  padding-left: 2%;
+  padding-right: 2%;
+  background-color: #fefa1b;
+
+  /*width: 75%;*/
+}
+.bannerComponent .selectize-input {
+  /* This refers to the displayed input control,
+     NOT the options shown in the dropdown menu. */
+  background-color: #D6D3C4 !important;
+  
+}
+
+.bannerComponent .selectize-dropdown-content > .option {
+  /* These are the options for the 
+     dropdown menu.  */
+   background-color: #D6D3C4;
+}
+.bannerComponent .selectize-control > .single  {
+  /* This is the container within which the
+     options are located.  */
+  background-color: #D6D3C4;
+}
+
+.bannerComponent .selectize-dropdown-content > .option:hover {
+  background-color: #eaeaea;
+}
+
+.bannerComponent .selectize-dropdown-content::-webkit-scrollbar {
+  /* This is the area within which the 
+     scrollbar track sits.  */
+  /*width: 12px;*/
+  background-color: #D6D3C4;
+}
+.bannerComponent .selectize-dropdown-content::-webkit-scrollbar-track {
+  /* This is the track for the scrollbar */
+  
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: #d1d1d1;
+}
+
+.bannerComponent .selectize-dropdown-content::-webkit-scrollbar-thumb {
+  /* This is the movable piece of the scollbar */
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #a7a7a7;
+}
+
+
+
+
+
+
+
+.controlClassStyle{
+  background-color: #500000;
+  padding-left: 5% !important;
+  padding-right: 5% !important;
+}
+.visible {
+  z-index: 3;
+}
+
+
+.controlsButton{
+  outline: none;
+  background-color: #D6D3C4;
+  
+}
+
+.settingsButtonContainer{
+  text-align: right;
+}
+.plotTitleContainer{
+  font: 2rem 'AmstelvarAlpha', sans-serif;
+}
+
+/*.controlInputDiv {
+  background-color: #85f04c;
+  position: absolute;
+  left: 0;
+}*/
+.controlInputDiv .selectize-input {
+  /* This refers to the displayed input control,
+     NOT the options shown in the dropdown menu. */
+     
+  background-color: #D6D3C4 !important;
+  width: 50%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.controlInputDiv .selectize-dropdown-content > .option {
+  /* These are the options for the 
+     dropdown menu.  */
+   background-color: #D6D3C4;
+}
+.controlInputDiv .selectize-control > .single  {
+  /* This is the container within which the
+     options are located.  */
+  background-color: #D6D3C4;
+}
+
+.controlInputDiv .selectize-dropdown-content > .option:hover {
+  background-color: #eaeaea;
+}
+
+.controlInputDiv .selectize-dropdown-content::-webkit-scrollbar {
+  /* This is the area within which the 
+     scrollbar track sits.  */
+  /*width: 12px;*/
+  background-color: #D6D3C4;
+}
+.controlInputDiv .selectize-dropdown-content::-webkit-scrollbar-track {
+  /* This is the track for the scrollbar */
+  
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: #d1d1d1;
+}
+
+.controlInputDiv .selectize-dropdown-content::-webkit-scrollbar-thumb {
+  /* This is the movable piece of the scollbar */
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #a7a7a7;
+}
+
+
+
+
+/* Below are the committee report css styles */
+.committeeReportHeader1Blank{
+    background: #FFFFFF;
+    color: #FFFFFF;  
+}
+.committeeReportHeader1BlankA{
+    background: #FFFFFF;
+    color: #FFFFFF;
+}
+.committeeReportHeader1BlankB{
+    background: #500000;
+    color: #500000;  
+}
+.committeeReportHeader1BlankC{
+    background: #5e239a;
+    color: #FFFFFF;  
+    padding-left: 0;
+    padding-right: 0;
+}
+.committeeReportHeader1Degree1{
+    /* background: #5e239a; */
+    background: #500000;
+    color: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    text-align: center; 
+    font-weight:bold;
+}
+.committeeReportHeader1Degree2{
+    /* background: #5e08b4; */
+    background: #500000;
+    color: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    text-align: center;  
+    padding-left: 0;
+    font-weight:bold;
+}
+.committeeReportHeader1Degree3{
+    /* background: #b4089a; */
+    background: #500000;
+    color: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    text-align: center;  
+    font-weight:bold;
+}
+.committeeReportDataBlankA{
+  background: #69d9dd;
+  text-align: center;
+}
+.committeeReportDataBlankB{
+  background: #23969a;
+  text-align: center;
+}
+.committeeReportDataBlankC{
+  background: #23479a;
+  text-align: center;
+}
+.committeeReportHeader2Blank{
+    background: #dd7d69;
+    color: #FFFFFF;  
+    padding-left: 0;
+    padding-right: 0;
+}
+.committeeReportHeader2Faculty{
+    background: #500000;
+    color: #FFFFFF;
+}
+
+.committeeReportMemberTypeC{
+    background: #500000;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.committeeReportMemberTypeCO{
+    background: #500000; 
+    color: #FFFFFF;
+    text-align: center;
+}
+.committeeReportMemberTypeM{
+    background: #500000;  
+    color: #FFFFFF;
+    text-align: center;
+    
+}
+.committeeReportFacultyName{
+    background: #500000;  
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.committeeReportDataBlank{
+    background: #500000;
+    color: #FFFFFF; 
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.tooltipCellHeaderName{
+  width: 175px;
+}
+.tooltipCellHeaderDegree{
+  width: 100px;
+  text-align:center;
+}
+.tooltipCellHeaderDate{
+  width: 120px;
+  text-align:center;
+}
+.tooltipCellHeaderMajor{
+  width: 100px;
+  text-align:center;
+}
+.tooltipCellName{
+  width: 175px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tooltipCellDegree{
+  width: 100px;
+  text-align:center;
+}
+.tooltipCellMajor{
+  width: 100px;
+  text-align:center;
+}
+.tooltipCellDate{
+  width: 120px;
+  text-align:center;
+}
+.elementContainer {
+  /*background-color: #acbfec; */
+  max-width: 95%;
+  margin: auto;
+  
+}
+.mytooltip {
+  /*background-color: magenta; */
+  /*color: #649405;*/
+  color: #FFFFFF;
+  position: relative;
+  width: 75px;
+  min-width: 75px;
+  max-width: 400px;
+  /*display: inline-block;*/
+  /*border-bottom: 1px dotted black;*/ /* If you want dots under the hoverable text */
+}
+.mytooltip .p {
+  padding: 0;
+}
+.theSecondTest {
+  /*background-color: magenta;
+  color: #649405; */
+  position: relative;
+  display: inline-block;
+}
+.theSecondTestA {
+  /*background-color: magenta;
+  color: #649405; */
+  position: relative;
+  display: inline-block;
+}
+/* Tooltip text */
+
+.theSecondTest .mytooltiptext {
+  visibility: hidden;
+  width: 420px;
+  background-color: #744F28;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  
+  
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  top: 100%;  /*This line and the next position the arrow. */
+  left: 50%;  /* Arrow position */
+  margin-left: -210px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  z-index: 1;
+}
+
+.theSecondTestA .mytooltiptext {
+  visibility: hidden;
+  width: 320px;
+  background-color: #744F28;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  /*max-height: 500px;*/
+  /*overflow: auto;*/
+  
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  top: 100%;  /*This line and the next position the arrow. */
+  left: 50%;  /* Arrow position */
+  margin-left: -160px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  z-index: 1;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+
+.theSecondTest:hover .mytooltiptext {
+  
+  visibility: visible;
+}
+
+.inputElementHidden {
+  display: none;
+}
+
+.inputElementVisible {
+  visibility: visible;
+}
+
+.theSecondTest .mytooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;  /* At the top of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #744F28 transparent;
+}
+.theSecondTestA:hover .mytooltiptext {
+  
+  visibility: visible;
+}
+
+.theSecondTestA .mytooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;  /* At the top of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #744F28 transparent;
+}
+.tooltipCell {
+  color: #FFFFFF;
+}

@@ -696,7 +696,9 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
                                 includeSemesters,
                                 rank=as.numeric(input$selectInsertFacultyID),
                                 load=NA,
-                                assigned.load=NA)
+                                assigned.load=NA,
+                                displayName=unlist(fix.names(input$newFacultyName)),
+                                UIN=input$newFacultyUIN)
 
 
           nextRecNum <- max(facultyUINs()$recnum)+1

@@ -1,0 +1,1070 @@
+.semesterSelect .shiny-bound-input .has-items{
+  background: #707373;
+  color: #FFFFFF;
+}
+
+/******************************************/
+/*                                        */
+/* Instructor Loads tab styles            */
+/*                                        */
+/******************************************/
+
+
+
+.instructorLoadsTable .dataTable thead th {
+  
+  padding-top: 2% !important;
+  padding-bottom: 2% !important;
+  color: #FFFFFF;
+  background-color: #707373;
+  border: 1px solid !important;
+  border-color: black !important;
+  
+  
+}
+.instructorLoadsTable .even {
+  background: #D6D3C4 !important;
+  border-color: blue !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  color: #FFFFFF;
+  border: 1px solid !important;
+}
+.instructorLoadsTable .odd {
+    background: #D6D3C4 !important;
+    border-color: blue !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+}
+.instructorLoadsTable .odd td {
+  font-weight: bold !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 1px solid !important;
+  border-left: 1px solid !important;
+  border-right: 1px solid !important;
+  border-top: 1px solid !important;
+  border-color: black !important;
+  
+}
+.instructorLoadsTable .even td {
+  font-weight: bold !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: 1px solid !important;
+  border-left: 1px solid !important;
+  border-right: 1px solid !important;
+  border-top: 1px solid !important;
+  border-color: black !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.instructorLoadsTable .even td input {
+  
+  color: #333;
+}
+.instructorLoadsTable .sorting_disabled th {
+  border: 1px solid black !important;
+}
+
+/******************************************/
+/*                                        */
+/* Course Selection tab styles            */
+/*                                        */
+/******************************************/
+.classOptionsTable {
+  border: 1px solid black;
+}
+.classOptionsTable input {
+  width: 25%;
+
+}
+.classOptionsTable .dataTable thead th { 
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  color: #FFFFFF;
+  background-color: #707373;
+}
+.classOptionsTable .dataTable .even {
+  background: #500000 !important;
+  border-color: blue !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  color: #FFFFFF;
+}
+.classOptionsTable .odd {
+    background: #D6D3C4 !important;
+    border-color: blue !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+}
+.classOptionsTable .odd input {
+  background: #D6D3C4 !important;
+}
+
+.classOptionsTable .odd td {
+  font-weight: bold !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  
+}
+.classOptionsTable .even td {
+  font-weight: bold !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  border-bottom: none !important;
+  border-top: none !important;
+}
+.classOptionsTable .even td input {
+  background: #500000;
+  color: #FFFFFF;
+}
+
+/******************************************/
+
+#graphicalScheduleNewDT .dataTable thead th {
+  
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  color: #FFFFFF;
+  background-color: #707373;
+}
+#graphicalScheduleNewDT .even {
+  background: rgba(116,79,40,0.5) !important;
+  border-color: blue !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+#graphicalScheduleNewDT .odd {
+    background: rgba(153, 133, 66, 0.5) !important;
+    border-color: blue !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+}
+#graphicalScheduleNewDT .odd td {
+  font-weight: bold !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  
+}
+#graphicalScheduleNewDT .even td {
+  font-weight: bold !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  border-bottom: none !important;
+  border-top: none !important;
+}
+
+/******************************************/
+/*                                        */
+/* Instructor Assignment tab styles       */
+/*                                        */
+/******************************************/
+.instructorAssignmentTable {
+  border: 1px solid black;
+}
+.instructorAssignmentTable .dataTable thead th {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  color: #FFFFFF;
+  background-color: #707373 !important;
+}
+
+.instructorAssignmentTable .even {
+  background-color: #D6D3C4 !important;
+  border-color: blue !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+.instructorAssignmentTable .odd {
+    background-color: #500000 !important;
+    border-color: blue !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+}
+
+.instructorAssignmentTable .odd td {
+  font-weight: bold !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  
+}
+.instructorAssignmentTable .even td {
+  font-weight: bold !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  border-bottom: none !important;
+  border-top: none !important;
+}
+
+.instructorAssignmentTable .form-group {
+  margin-bottom: 0;
+  color: #333;
+  font-weight: normal;
+}
+/* Beginning of classes for Long Term Planning Page */
+.LongTermPlanningHeader{
+  text-align: center;
+}  
+
+
+/* End of classes for Long Term Planning Page */
+
+/* Beginning of classes for Graphical Scheduler */
+
+.graphicalScheduleHeaderRow1a{
+  background: #967e73;
+  padding: 2%;
+}
+.graphicalScheduleHeaderDiv1a{
+  background: #437bd6;
+}
+.graphicalSchedulColumn1a{
+  border: 1px solid red;
+}
+.graphicalScheduleColumn2a{
+  border: 1px solid blue;
+}
+.graphicalScheduleColumn3a{
+  border: 1px solid green;
+}
+.graphicalScheduleCourseID{
+  /*background: #967e73;*/
+  font-size: 100%;
+  position: relative;
+  font-weight: bold;
+}
+.graphicalScheduleColumn1{
+  /*padding-left: 0;*/
+}
+.graphicalScheduleColumn2{
+  /*border: 2px solid #73AD21;
+  background: #2c33f6; */
+  text-align: center;
+}
+.centerBlock {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+.graphicalScheduleColumn3{
+  /*border: 2px solid #73AD21; */ 
+  /*background: #707373; */
+  color: #FFFFFF;
+  /*padding-left: 0;*/
+}
+.graphicalScheduleDescription{
+  /* background: #967e73; 
+  font-size: 85%; */
+  position: relative;
+  /*right: 1em; */
+  font-weight: bold;
+}
+.graphicalScheduleHeaderElement{
+  /* background: #967e73; */
+  position: relative;
+  text-align: center;
+  /*right: 1em; */
+  font-weight: bold;
+  color: #FFFFFF;
+  background: #707373;
+}
+.graphicalScheduleHeaderElementLeft{
+  /* background: #967e73; */
+  position: relative;
+  font-weight: bold;
+  color: #FFFFFF;
+  padding-left: 0;
+}
+.graphicalScheduleHeaderRow{
+  background: #707373; 
+  /*padding: 2%;*/
+}
+.graphicalScheduleHeaderDivCSS{
+  /* padding: 2%; */
+}
+.graphicalScheduleContainer{
+  padding: 2%;
+}
+.graphicalScheduleRowEven{
+  background: rgb(116,79,40);
+  background: rgba(116,79,40,0.5);
+}
+.graphicalScheduleRowOdd{
+  background: rgb(153, 133,66);
+  background: rgba(153, 133, 66, 0.5);
+  
+}
+.courseButtonStyle {
+  background: #500000;
+}
+.courseButtonStyleCheck{
+  background: #500000;
+  color: #FFFFFF;
+  opacity: 1;
+  
+}
+.courseButtonStyleUnselected {
+  background: rgb(80,0,0);
+  background: rgba(80,0,0,0.3);
+  color: #FFFFFF;
+  
+}
+.testCSS1{
+  background: #500000;
+  border: 1px solid blue;
+  padding: 0;
+}
+/* End of classes for Graphical Scheduler */
+
+
+
+
+.availableBackups{
+  
+  background: #500000;
+  color: #FFFFFF;
+  border-radius: 5px;
+  outline: 1px solid black;
+}
+.backupActionLink{
+  padding-left: 5%;
+}
+#rowLegacyReportHeader {
+  background: #707373;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+#courseNumberColumn{
+  /*outline: 1px solid red;*/
+  padding: 0;
+  
+}
+.rowLegacyReportClass{
+  background: #500000;
+}
+
+#courseRow{
+  /* background: yellow;*/
+  /*outline: 1px solid black;*/
+  /* display: -webkit-flex;
+  -webkit-align-items: stretch;
+  display: flex;
+  align-items: center;*/
+}
+#courseNameColumn{
+  /*outline: 1px solid blue;*/
+    padding: 0;
+  /* display: -webkit-flex;
+  -webkit-align-items: stretch; */
+  display: absolute;
+  align-items: center;
+}
+#courseSelectorColumn{
+  /*outline: 1px solid blue;*/
+ /*   padding: 0;
+  display: -webkit-flex;
+  -webkit-align-items: stretch;
+  display: flex;
+  align-items: center; */
+  padding-left: 2%;
+}
+#coursesOfferedColumn{
+  outline: 1px solid green;
+}
+#insertModalRow {
+  display:flex;    
+  align-items:baseline;
+  /*height: 48px;*/
+  
+}
+#buildGrid{
+  background: #D6D3C4;
+}
+.codeErrorsToAddress{
+  border: 1px solid black;
+  border-radius: 5px;
+  padding-left: 2%;
+}
+#insertSectionCommit {
+  background-color: #998542;
+}
+#deleteSectionCommit {
+  background-color: #998542;
+}
+
+.modal-content .modal-body {
+  background: #500000;
+}
+.modal-content .modal-body label{
+  color: #FFFFFF !important;
+}
+
+.modal-content .modal-body h4 {
+  color: #FFFFFF !important;
+}
+.modal-content .modal-body h5 {
+  color: #FFFFFF !important;
+}
+.modal-content .modal-footer{
+  background: #500000;
+  color: #FFFFFF !important;
+}
+
+#deleteSectionModal {
+  background: #500000;
+  color: #FFFFFF;
+}
+#addSectionModal {
+  background:#500000;
+  color: #ffffff;
+}
+#addSectionModal .modal-footer{
+  background: #500000;
+}
+/* #sectionsOptions1_2019C .shiny-bound-input {
+  
+  background: #D6D3C4;
+  color: #FFFFFF;
+  height: 20px;
+  padding: 0;
+  
+}*/
+/* #sectionsOptions1_2019C -webkit-inner-spin-button{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin: 0;
+  
+} */
+
+#instructorNew1 .shinyjs-resettable{
+  /* This doesn't work */
+  background: #D6D3C4;
+}
+#availableFacultyHeader{
+  background: #D6D3C4;
+  
+}
+#sectionNew1 .form-control {
+  background: #D6D3C4;
+}
+#chooseSemesterList1 .selectize-input {
+  background: #707373;
+  color: #ffffff;
+}
+#chooseSemesterList2 .selectize-input {
+  background: #707373;
+  color: #ffffff;
+}
+#chooseSemesterList10BeginNew .selectize-input { 
+  background: #707373;
+  color: #ffffff;
+}
+
+#chooseSemesterList10EndNew .selectize-input {
+  background: #707373;
+  color: #ffffff;
+}
+#facultyColumnHeaderDiv {
+  background: #500000;
+}
+.fCHDC{
+  background: #707373;
+}
+#headerRow{
+  /*border: 1px solid red;*/
+}
+#facultyColumnHeader{
+  /*border: 1px solid yellow;*/
+  padding: 0;
+  position: relative;
+  bottom: 2%;
+}
+#facultyColumnData{
+  /*border: 1px solid red;*/
+}
+#semesterColumnHeader{
+  /*border: 1px solid green;*/
+  padding: 0;
+}
+#loadContainer{
+  border: 1px solid black; 
+  padding: 0;
+}
+#wholeRowContainer{
+  /*border: 1px solid blue;*/
+  padding: 0;
+}
+#facultyModifyButtonsRow{
+  /*border: 1px solid orange;*/
+  padding: 0;
+}
+.courseDeleteCourseID {
+  /* border: 1px solid red;
+  background: #dcd909;*/
+}
+.courseDeleteSection {
+  /*border: 1px solid red;
+  background: #dcd909;*/
+}
+.testEven{
+  /*background: #dcd909;*/
+  border: 1px solid black;
+}
+.testOdd{
+  /*background: #09c0dc;*/
+  border: 1px solid black;
+}
+.testEven1{
+  background: #dcd909;
+}
+.evenRow{
+  background: #D6D3C4;
+  height: 24px;
+}
+.oddRow{
+  background: #500000;
+  color: #FFFFFF;
+  height: 24px;
+}
+.evenRow1{
+  background: #D6D3C4;
+  height: 48px;
+}
+.oddRow1{
+  background: #500000;
+  color: #FFFFFF;
+  height: 48px;
+}
+.evenRow2{
+  background: #D6D3C4;
+  /* height: 48px;*/
+}
+.oddRow2{
+  background: #500000;
+  color: #FFFFFF;
+  /*height: 48px;*/
+}
+.oddRow .shiny-bound-input {
+  height: 20px;
+  background: #500000;
+  color: #FFFFFF;
+  padding-left: 20%;
+  border: 0;
+}
+
+.evenRow .shiny-bound-input {
+  height: 20px;
+  background: #D6D3C4;
+  padding-left: 20%;
+  border: 0;
+}
+
+
+.FN_Hyperlink{
+  padding: 3%;
+   color: #003C71; 
+}
+.testDiv{
+  /*border: 1px solid green;*/
+  background: #dcd909;
+}
+
+.outlineBlock{
+  border: 1px solid black;
+}
+.outlineBlockRed{
+  border: 1px solid red;
+}
+.facultyAddButton{
+  background-color: #5B6236;
+  /* border-style: none; */
+}
+.facultyRemoveButton{
+  background-color: #5B6236;
+  /* border-style: none; */
+}
+.HoldsNavButtonRightSide{
+  padding:0;
+  position: absolute;
+  left: 0;
+}
+.HoldsNavButtonLeftSide{
+  /*display: -webkit-flex;
+  -webkit-align-items: stretch;
+  display: flex;
+  align-items: right;*/
+  position:absolute;
+  right:0;
+  padding: 0;
+}
+.SubtractOneSemester{
+  background: #D6D3C4;
+  border-style: none;
+}
+.AddOneSemester{
+  background: #D6D3C4;
+  border-style: none;
+}
+.FacultyHeaderDiv{
+  background: #D6D3C4;
+
+}
+.columnHeaderVertical{
+  background: #D6D3C4;
+  writing-mode: vertical-lr;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 2%;
+  
+}
+
+.AL_Hyperlink{
+  color: #ffffff;
+}
+.AL_Hyperlink.a {
+  color: red;
+}
+.positionCodeEmpty{
+  background: #D6D3C4;
+  text-align: center;
+  color: #D6D3C4;
+}
+
+.positionCode1{
+  padding: 0;
+  background: #500000;
+  opacity: 0.3;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode2{
+  background: #500000;
+  opacity: 0.6;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.positionCode3{
+  background: #500000;
+  opacity: 1;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode4{
+  background: #003C71;
+  opacity: 0.3;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode5{
+  background: #5B6236;
+  opacity: 0.3;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode6{
+  background: #5B6236;
+  opacity: 0.6;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode7{
+  background: #744F28;
+  opacity: 0.3;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode8{
+  background: #744F28;
+  opacity: 0.6;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode9{
+  background: #744F28;
+  opacity: 1;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode10{
+  background: #707373;
+  opacity: 0.3;
+  color: #332C2C;
+  text-align: center;
+}
+.positionCode11{
+  background: #707373;
+  opacity: 0.6;  
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode12{
+  background: #707373;
+  opacity: 0.3;  
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode13{
+  background: #332C2C;
+  opacity: 1;
+  color: #FFFFFF;
+  text-align: center;
+}
+.positionCode14{
+  background: #52bdff;
+  opacity: 1;
+  color: #FFFFFF;
+  text-align: center;}
+
+.futureCourseHeader1{
+    background: #500000;
+    color: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+   
+
+}
+
+.futureCourseOfferedCourseInfo{
+  background: #FFFFFF;
+  font-family: "Arial", Helvetica, sans-serif;
+  font-size: 70%;
+  text-align: left;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding-right: 0;
+}
+.futureCourseOfferedRow{
+  background: #FFFFFF;
+  font-family: "Arial", Helvetica, sans-serif;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+.futureCourseDetails1{
+    background: #FFFFFF;
+  font-family: "Arial", Helvetica, sans-serif;
+  text-align: left;
+  border-right: 1px solid black;
+  padding-left: 5%;
+}
+.futureCourseDetails2{
+    background: #FFFFFF;
+  font-family: "Arial", Helvetica, sans-serif;
+  text-align: left;
+  padding-left: 5%;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+.futureCourseHeader1Blank{
+    background: #500000;
+    color: #500000;
+    
+}
+.futureCourseHeader1Blank2{
+    background: #500000;
+    color: #500000;
+    font-size: 70%;
+    
+}
+.futureCourseHeader2Blank{
+  background: #744F28;
+  color: #FFFFFF;
+  
+}
+.futureCourseHeader3Blank{
+  background: #998542;
+  color: #FFFFFF;
+  
+}
+.futureCourseHeader2{
+    background: #744F28;
+    color: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    margin: 0;
+    
+}
+.futureCourseHeader3{
+    background: #998542;
+    color: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    margin: 0;
+   
+}
+.futureCourseOffered1{
+    background: #D6D3C4;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    
+}
+.BlankText1{
+    background: #D6D3C4;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    color: #D6D3C4;
+    
+}
+.BlankText1b{
+    background: #D6D3C4;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    border-left: 1px solid black;
+    color: #D6D3C4;
+    
+}
+.futureCourseOffered1b{
+    background: #D6D3C4;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    border-left: 1px solid black;
+    
+}
+.futureCourseOffered2{
+    background: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+}
+.BlankText2{
+    background: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    color: #FFFFFF;
+}
+.futureCourseOffered2b{
+    background: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    border-left: 1px solid black;
+}
+.BlankText2b{
+    background: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    border-left: 1px solid black;
+    color: #FFFFFF;
+}
+
+.futureCourseOffered1Blank{
+    background: #D6D3C4;
+    font-family: "Arial", Helvetica, sans-serif;
+    text-align: center;
+    outline: 1px solid black;
+    
+}
+.futureCourseOffered2Blank{
+    background: #FFFFFF;
+    font-family: "Arial", Helvetica, sans-serif;
+    text-align: center;
+    outline: 1px solid black;
+}
+.LongTermPlanningOffered{
+  background: #73AD21;
+  border: 2px solid #000000;
+  text-align: center;
+}
+.LongTermPlanningNotOffered{
+  background: #e2ca73;
+  border: 2px solid #73AD21;
+  text-align: center;
+}
+.FacultyReportCourse{
+  background: #b3ffb3;
+  border: 1px solid #73AD21;
+}
+.FacultyReportCourseOnline{
+  background: #73AD21;
+  border: 1px solid #e2ca73;
+}
+.FacultyReportHeader{
+  background: #e2ca73;
+}
+.MultiSectionReportHeader{
+  padding-left: 5%;
+  padding-right:5%;
+  background: #e2ca73;
+}
+.offeredCourse {
+  background: #b3ffb3;
+  border: 1px solid #73AD21;
+
+}
+.LegacyReportOfferedCourse{
+  /*background: #b3ffb3;
+  border: 1px solid #73AD21; */
+  padding-left: 0 !important;
+}
+.LegacyReportEmptyCourse{
+  background: #b3ffb3;
+}
+.LegacyReportOfferedCourseOnline{
+  /*background: #500000;
+  color: #FFFFFF;
+  opacity: 0.3;*/
+  color: #998542;
+}
+.LegacyReportFacultyOK {
+  /*border: 1px solid #e2ca73;*/
+  
+}
+.LegacyReportFacultyOverload {
+  /*background: #a30000;
+  border: 3px solid #b3ffb3;*/
+  /*border: 1px dashed black;*/
+  color: #E4002B;
+}
+.LegacyReportFacultyUnderload {
+  /*background: #b3ffb3;
+  border: 3px solid #a78e62;*/
+  /*border: 1px dashed red;*/
+  color: #E4002B;
+}
+.scheduledClassesHeader{
+  background: #b3ffb3;
+}
+.courseOptionCourseID {
+  /* background: #b3ffb3;
+  border: 3px solid #73AD21; */
+}
+.courseOptionDescription {
+  /* background: #b3ffb3;
+  border: 3px solid #73AD21; */
+  /* display: -webkit-flex;
+  -webkit-align-items: stretch; */
+  display: block-line-height;
+  align-items: center;
+}
+.courseOptionSections {
+  background: #b3ffb3;
+  border: 3px solid #73AD21;
+}
+.scheduledClassesCourseID{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.scheduledClassesDescription{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.scheduledClassesSection{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.scheduledClassesInstructor{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.scheduledClassesOnline{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.scheduledClassesW{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.instructorLoadsFaculty{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.instructorLoadsLoad{
+  background: #b3ffb3;
+  border: 3px solid #73AD21; 
+}
+.courseButtonStyle {
+  background: #b3ffb3;
+}
+
+.offeredCourse div{
+  background-color: #b3ffb3;
+  padding-left: 10%; /* padding here moves text in the box to the right */
+  margin-bottom: 0; /* this puts space around the outside of the div */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #0e0345;  
+}
+
+.col-sm-1{
+  border: red;
+}
+.col-sm-2{
+  border: red;
+}
+
+.courseSelectionCourseId {
+  background: #967e73;
+}
+.courseSelectionDescription {
+  background: #967e73;
+}
+.courseSelectionSections {
+  background: #967e73;
+}
+
+.personalInfo1 {
+  color: #800000;
+  background-color: #ffffff;
+}
+.personalInfo1 label {
+  background-color: #ffffff;
+  margin-bottom: 1%;
+}
+.personalInfo1 div {
+  /* background-color: #b3ffb3;
+  padding-left: 10%; /* padding here moves text in the box to the right */
+  margin-bottom: 20px; /* this puts space around the outside of the div */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #0e0345;
+}
+  #btnHelp{
+  background-color:green;
+  color:white;
+  padding: 0px 6px;
+  position:fixed;
+  right:20px;
+  top:12px;
+  z-index:100000000000;
+  border: 0px;
+}
+
+#btnHelp:hover{
+  background-color:white;
+  color:green;
+}
+
+#busy{
+  width:100px;
+  height:20px;
+  position: fixed;
+  z-index: 100000000000;
+  background-color: white;
+  top: 8px;
+  right: 10px; 
+  visibility: hidden;
+}

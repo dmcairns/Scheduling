@@ -17,6 +17,8 @@ fullSchedulingBoxModuleUI <- function(id){
     solidHeader = FALSE,
     collapsible = FALSE,
     tagList(
+      includeCSS(system.file("extdata", "DashboardModularized.css", package="Scheduling", mustWork=TRUE)),
+      includeCSS(system.file("extdata", "scheduling.css", package = "Scheduling", mustWork=TRUE)),
       shiny::uiOutput(ns("schedulingTools"))
     ),
     sidebar = boxSidebar(

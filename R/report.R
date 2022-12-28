@@ -23,7 +23,8 @@ reportModuleUI <- function(id){
                    ),
                    htmltools::div(class="aBoxBodyC3Background",
                                   fluidRow(
-                                    column(12, uiOutput(ns("legacyReport1")))
+                                    #column(12, uiOutput(ns("legacyReport1")))
+                                    column(12, uiOutput(ns("revisedReport2022")))
                                   )
                    ),
                    id=ns("legacyReportBox1"),
@@ -305,14 +306,14 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           c(sem1, sem2, summer)
         }
         #combine t.summary.info and available faculty to get zero loads.
-        # select the appropriate semester from  available.faculty
+
         fix.names <- function(data){
           check.duplicate.names <- function(in.data){
             t.substr <- gsub(",.*$", "", in.data)
             t.first <- gsub('.*,\\s*','', in.data)
             t.first <- substr(t.first, 1,1)
 
-            if((t.substr=="Bednarz")|(t.substr=="Guneralp"))
+            if((t.substr=="Bednarz")|(t.substr=="Guneralp")|(t.substr=="Zhang"))
               t.out <- paste0(t.first, ". ", t.substr)
             else
               t.out <- t.substr
@@ -322,7 +323,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           t.out
         }
 
-        #t.sem <- inSemester()
         req(input$theSemester1)
         t.sem <- input$theSemester1
         semester.code.new <- inSemesterCodes %>%
@@ -332,17 +332,11 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           select(sem5) %>%
           unlist()
 
-
-        #get the data for the specified semester
-        cat(blue("dim(theMasterCourses()):", dim(theMasterCourses()), "\n"))
-        cat(blue("input$theSemester1:", input$theSemester1, "\n"))
         semester.data <- theMasterCourses() %>%
-          #filter(semester==inSemester())
           filter(semester==input$theSemester1)
 
-        cat(blue("dim(semester.data):", dim(semester.data), "\n"))
         cat(blue("displayedInstructors:", displayedInstructors, "\n"))
-#browser()
+
         if(dim(semester.data)[1] == 0){
           t.out <- h4("No courses are scheduled to be taught this term.  Add courses using the Course Selection tab.", style="color: red")
         } else{
@@ -370,7 +364,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               TRUE ~ as.double(assigned.load)
             ))
 
-          # t.summary.info <<- summary.info
           t.summary.info <- summary.info
 
 
@@ -378,7 +371,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           IDs <- seq_len(nrow(semester.data))
           numInstructors <- dim(summary.info)[1]
           cat(yellow("numInstructors:", numInstructors, "\n"))
-          #browser()
+
           t.out <- lapply(1:(numInstructors), function(i) {
             # determine load level (OK, overload, underload), assign to css.courseLoadStatus
             #browser()
@@ -390,17 +383,12 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
               filter(instructor==summary.info$instructor[i]) %>%
               select(assigned.load) %>%
               unlist()
-#browser()
-            #annual.load <- calc.annual.courses.assigned.including.stacked.New(t.summary.info$instructor[i], inSemester())
             annual.load <- calc.annual.courses.assigned.including.stacked.New(t.summary.info$instructor[i], input$theSemester1)
+            browser()
             if(is.na(contracted.load)) {
-              # do not include this faculty member in the report
-              #contracted.load <- 0
               t.out.partial <- NULL
             } else {
-              #displayedInstructors <<- displayedInstructors + 1
               displayedInstructors <<- displayedInstructors + 1
-              #cat(blue("iterated displayedInstructors:", displayedInstructors, "\n"))
               if(unlist(contracted.load)==modified.assigned.load){
                 css.courseLoadStatus <- "LegacyReportFacultyOK"
               } else {
@@ -414,7 +402,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
                 cssClass <- "evenRow2"
               }
               fallOrSpring <- inSemesterCodes %>%
-                #filter(longSemester==inSemester()) %>%
                 filter(longSemester==input$theSemester1) %>%
                 select("semester.chr") %>%
                 unlist() %>%
@@ -463,18 +450,18 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             }
             t.out.partial
           })#end of lapply that generates the UI
-          #t.out.check <<- t.out
+
           t.out.check <- t.out
-        } #end of else checking to see that there are data
+        }
 
         cat(red("displayedInstructors:", displayedInstructors, "\n"))
         if(displayedInstructors == 0){
-          #t.out <- h4(paste0("No instructors have assigned courses for ", inSemester(), "."), style="color: red")
           t.out <- h4(paste0("No instructors have assigned courses for ", input$theSemester1, "."), style="color: red")
-
         }
         t.out
       })
+
+
       output$legacyReport2 <- renderUI({
         ns <- session$ns
         output$UnassignedTable <- DT::renderDataTable({
@@ -512,6 +499,513 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         )
 
       })
+
+      output$revisedReport2022 <- renderUI({
+
+        ########################################
+        # Required Data                        #
+        ########################################
+        req(inSemester())
+        req(theMasterCourses())
+        req(theCombinedData())
+        req(input$theSemester1)
+
+        ########################################
+        # Global values initialization         #
+        ########################################
+
+        ns <- session$ns
+        renderHeader <- TRUE
+
+        ########################################
+        # Report specific Functions            #
+        ########################################
+
+        find.courses <- function(data, data.summary, i){
+          #pull out the courses that are taught by a specific instructor
+          instructor.of.interest <- data.summary[i,"instructor"]
+          courses.taught <- data %>%
+            filter(instructor==unlist(instructor.of.interest)) %>%
+            select(courseID, OL) %>%
+            arrange(courseID)
+          courses.taught
+        }
+        update.CSS.local <- function(input.name, index, class.name){
+          addClass(paste0(input.name,index), class.name)
+        }
+        extract.course <- function(data, index){
+          t.out <- data[index,]
+          last.number <<- last.number + 1
+          #last.number <- last.number + 1
+          t.out
+        }
+        individual.element <- function(in.data, i){
+
+          if(dim(data.frame(in.data))[[1]]==0) t.output <- NULL
+          else {
+            display.class <- "LegacyReportOfferedCourse"
+            if(in.data[[i]]$OL) display.class <- "LegacyReportOfferedCourseOnline"
+            t.output <- column(2,div(in.data[[i]]$courseID, class=display.class))
+          }
+          #cat("individual.element:", in.data[[i]]$courseID, "\n")
+          t.output
+        }
+        create.textboxes <- function(data, data.summary, i){
+          #browser()
+          courses.found <- find.courses(data, data.summary, i)
+          numCourses <- dim(courses.found)[1]
+          t.out <- lapply(1:(numCourses), function(j) {
+            extract.course(courses.found, j)
+          })
+
+          if(is.na(t.out[[1]][2])) {
+            #cat("***********************In is.na(t.out):\n")
+            instructor.of.interest <- data.summary[i,"instructor"]
+            instructor.of.interest <- as.vector(unlist(instructor.of.interest))
+
+            # if load for instructor in the selected semester is zero,
+            # then there needs to be a reason for it.  Otherwise, the lack of
+            # courses just means that they haven't been assigned yet.
+
+            t.load <- theCombinedData() %>%
+              mutate(shortName=displayName) %>%
+              filter(shortName == instructor.of.interest) %>%
+              #filter(longSemester == inSemester()) %>%
+              filter(longSemester == input$theSemester1) %>%
+              select("Faculty"="shortName", "semester"="longSemester", "load") %>%
+              mutate(load = case_when(
+                is.na(load) ~ 0,
+                TRUE ~ as.numeric(load)
+              )) %>%
+              unlist()
+
+            if(as.numeric(t.load[3]) == 0) {
+              leaveType <- theLeaveData() %>%
+                filter(faculty==instructor.of.interest) %>%
+                #filter(semester==inSemester()) %>%
+                filter(semester==input$theSemester1) %>%
+                select(leaveType) %>%
+                unlist()
+              the.output <- list(
+                #output of the type individual element
+                column(6,div(leaveType))
+              )
+            } else the.output <- NULL
+          }
+          else {
+            if(numCourses==1){
+              the.output <- list(individual.element(t.out,1))
+            } else if(numCourses==2){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2)
+              )
+            } else if(numCourses==3){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2),
+                individual.element(t.out,3)
+              )
+            } else if(numCourses ==4){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2),
+                individual.element(t.out,3),
+                individual.element(t.out,4)
+              )
+            } else if(numCourses ==5){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2),
+                individual.element(t.out,3),
+                individual.element(t.out,4),
+                individual.element(t.out,5)
+              )
+            } else if(numCourses ==6){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2),
+                individual.element(t.out,3),
+                individual.element(t.out,4),
+                individual.element(t.out,5),
+                individual.element(t.out,6)
+              )
+            } else if(numCourses ==7){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2),
+                individual.element(t.out,3),
+                individual.element(t.out,4),
+                individual.element(t.out,5),
+                individual.element(t.out,6),
+                individual.element(t.out,7)
+              )
+            } else if(numCourses ==8){
+              the.output <- list(
+                individual.element(t.out,1),
+                individual.element(t.out,2),
+                individual.element(t.out,3),
+                individual.element(t.out,4),
+                individual.element(t.out,5),
+                individual.element(t.out,6),
+                individual.element(t.out,7),
+                individual.element(t.out,8)
+              )
+
+            } else {
+              cat("******************************* More than two **************\n")
+              for(k in 1:numCourses){
+                if(k==1) the.output <- tagList(individual.element(t.out, k))
+                else the.output <- c(the.output, individual.element(t.out, k))
+              }
+            }
+          }
+
+          the.output
+        }
+
+        calc.courses.assigned.including.stacked.New <- function(data.faculty, in.semester){
+
+          output <- theCombinedData() %>%
+            filter(shortName==data.faculty) %>%
+            filter(longSemester==in.semester) %>%
+            select("assigned.load") %>%
+            mutate(assigned.load=case_when(
+              is.na(assigned.load) ~ 0,
+              TRUE ~ assigned.load
+            )) %>%
+            unlist()
+        }
+        calc.annual.courses.assigned.including.stacked.New <- function(data.faculty, in.semester){
+
+          term <- gsub(" .*$", "", in.semester)
+          year <- as.numeric(unlist(str_extract_all(in.semester, "[0-9]+")))
+          if(term=="Fall"){
+            other.semester <- paste("Spring", year+1)
+            summer.term <- paste("Summer", year+1)
+          } else if(term=="Spring"){
+            other.semester <- paste("Fall", year-1)
+            summer.term <- paste("Summer", year)
+          } else {
+            fall.semester <- paste("Fall", year-1)
+            spring.semester <- paste("Spring", year)
+          }
+          if(term != "Summer"){
+            sem1 <- calc.courses.assigned.including.stacked.New(data.faculty, in.semester)
+            sem2 <- calc.courses.assigned.including.stacked.New(data.faculty, other.semester)
+            summer <- calc.courses.assigned.including.stacked.New(data.faculty, summer.term)
+          } else {
+            sem1 <- calc.courses.assigned.including.stacked.New(data.faculty, fall.semester)
+            sem2 <- calc.courses.assigned.including.stacked.New(data.faculty, spring.semester)
+            summer <- calc.courses.assigned.including.stacked.New(data.faculty, in.semester)
+          }
+
+          #sum(sem1,sem2)
+          c(sem1, sem2, summer)
+        }
+
+        extractCurrentSemesterData <- function(inSemester){
+          semester.data <- theMasterCourses() %>%
+            filter(semester==input$theSemester1)
+          semester.data
+        }
+
+        extractAcademicYearData <- function(inSemester){
+
+
+          ##########################################
+          # Academic Year begins in Fall and then  #
+          # continues into Spring and Summer.      #
+          # AY2023 would include Fall 2022,        #
+          # Spring 2023, Summer 2023               #
+          ##########################################
+
+          ##########################################
+          # Data used from global environment:     #
+          #   inSemesterCodes                      #
+          #   theMasterCourses()                   #
+          #   theCombinedData()                    #
+          ##########################################
+
+          # Local semester code data creation (Adding academicYear to data frame)
+          localSemesterCodes <- inSemesterCodes %>%
+            mutate(academicYear=case_when(semester.chr == "Fall" ~ Year+1,
+                                          TRUE ~ Year)
+                   ) %>%
+            select("semester.display", "academicYear")
+
+          # Determine the Academic Year
+          theAcademicYear <- localSemesterCodes %>%
+            filter(semester.display==inSemester) %>%
+            pull(academicYear)
+
+          # Add the Academic Year by joining masterCourses to localSemesterCodes
+          # and filter out the summers.
+
+          localMasterCoursesSingleAcademicYear <- theMasterCourses() %>%
+            left_join(localSemesterCodes, by=c("semester"="semester.display")) %>%
+            filter(academicYear == theAcademicYear) %>%
+            filter(semester != paste("Summer", academicYear))
+
+          # Add the Academic Year by joining theCombinedData to localSemesterCodes
+          # and filter out the summers.
+          localCombinedDataAcademicYear <- theCombinedData() %>%
+            left_join(localSemesterCodes, by=c("longSemester"="semester.display")) %>%
+            filter(academicYear == theAcademicYear) %>%
+            filter(longSemester != paste("Summer", academicYear))
+
+          # Calculate Annual Load (not including summer) by faculty Member
+
+          annualAssignedLoads <- localMasterCoursesSingleAcademicYear %>%
+            group_by(UIN, Faculty) %>%
+            summarize(annualAssignedLoad=sum(load.contribution), .groups="drop")
+
+          annualContractedLoads <- localCombinedDataAcademicYear %>%
+            group_by(UIN) %>%
+            summarize(annualContractedLoad=sum(load), .groups="drop")
+
+
+          annualLoads <- annualAssignedLoads %>%
+            left_join(annualContractedLoads, by=c("UIN"))
+
+          annualLoads
+
+        }
+
+        generateHTML4ReportOrig <- function(i) {
+          contracted.load <- summary.info %>%
+            filter(instructor==t.summary.info$instructor[i]) %>%
+            select(load) %>%
+            unlist()
+          modified.assigned.load <- summary.info %>%
+            filter(instructor==summary.info$instructor[i]) %>%
+            select(assigned.load) %>%
+            unlist()
+          browser()
+          # contracted.load <- academicYearData %>%
+          #   filter(instructor==)
+          annual.load <- calc.annual.courses.assigned.including.stacked.New(t.summary.info$instructor[i], input$theSemester1)
+
+          if(is.na(contracted.load)) {
+            t.out.partial <- NULL
+          } else {
+            displayedInstructors <<- displayedInstructors + 1
+            if(unlist(contracted.load)==modified.assigned.load){
+              css.courseLoadStatus <- "LegacyReportFacultyOK"
+            } else {
+              if(unlist(contracted.load) > modified.assigned.load){
+                css.courseLoadStatus <- "LegacyReportFacultyUnderload"
+              } else css.courseLoadStatus <- "LegacyReportFacultyOverload"
+            }
+            if (displayedInstructors %% 2 == 0){
+              cssClass <- "oddRow2"
+            } else {
+              cssClass <- "evenRow2"
+            }
+            fallOrSpring <- inSemesterCodes %>%
+              filter(longSemester==input$theSemester1) %>%
+              select("semester.chr") %>%
+              unlist() %>%
+              as.vector()
+            if(fallOrSpring=="Fall"){
+              AL1 <- annual.load[1]
+              AL2 <- annual.load[2]
+              SL <- annual.load[3]
+            } else if (fallOrSpring == "Spring") {
+              AL1 <- annual.load[2]
+              AL2 <- annual.load[1]
+              SL <- annual.load[3]
+            } else {
+              AL1 <- annual.load[2]
+              AL2 <- annual.load[1]
+              SL <- annual.load[3]
+            }
+            if(renderHeader==TRUE){
+
+              t.out.partial1 <- list(
+                div(id="rowLegacyReportHeader",
+                    fluidRow(
+                      div(column(2, div("Faculty"))),
+                      div(column(2, div("Courses Assigned (F/Sp/Su)"))),
+                      div(column(2, div("Courses")))
+                    ))
+              )
+              renderHeader <<- FALSE
+
+
+            } else t.out.partial1 <- NULL
+
+
+            t.out.partial2 <- list(
+              div(id=paste0("rowLegacyReport", i),
+                  fluidRow(
+
+                    div(column(2, div(summary.info$instructor[i], class=css.courseLoadStatus))),
+                    div(column(2, div(paste(AL1, "/", AL2, "/", SL), class=css.courseLoadStatus))),
+                    div(column(8, create.textboxes(semester.data, summary.info, i), inline=TRUE))
+                  ), class=cssClass
+              )
+            )
+            t.out.partial <- list(t.out.partial1, t.out.partial2)
+
+          }
+          t.out.partial
+        }
+
+        generateHTML4Report <- function(i, inSummaryInfo) {
+
+          targetInstructor <- inSummaryInfo$instructor[i]
+
+          contracted.load <- inSummaryInfo %>%
+            filter(instructor==targetInstructor) %>%
+            select(load) %>%
+            unlist()
+          modified.assigned.load <- inSummaryInfo %>%
+            filter(instructor==targetInstructor) %>%
+            select(assigned.load) %>%
+            unlist()
+          browser()
+          # contracted.load <- academicYearData %>%
+          #   filter(instructor==)
+          annual.load <- calc.annual.courses.assigned.including.stacked.New(targetInstructor, input$theSemester1)
+
+          if(is.na(contracted.load)) {
+            t.out.partial <- NULL
+          } else {
+            displayedInstructors <<- displayedInstructors + 1
+            if(unlist(contracted.load)==modified.assigned.load){
+              css.courseLoadStatus <- "LegacyReportFacultyOK"
+            } else {
+              if(unlist(contracted.load) > modified.assigned.load){
+                css.courseLoadStatus <- "LegacyReportFacultyUnderload"
+              } else css.courseLoadStatus <- "LegacyReportFacultyOverload"
+            }
+            if (displayedInstructors %% 2 == 0){
+              cssClass <- "oddRow2"
+            } else {
+              cssClass <- "evenRow2"
+            }
+            fallOrSpring <- inSemesterCodes %>%
+              filter(longSemester==input$theSemester1) %>%
+              select("semester.chr") %>%
+              unlist() %>%
+              as.vector()
+            if(fallOrSpring=="Fall"){
+              AL1 <- annual.load[1]
+              AL2 <- annual.load[2]
+              SL <- annual.load[3]
+            } else if (fallOrSpring == "Spring") {
+              AL1 <- annual.load[2]
+              AL2 <- annual.load[1]
+              SL <- annual.load[3]
+            } else {
+              AL1 <- annual.load[2]
+              AL2 <- annual.load[1]
+              SL <- annual.load[3]
+            }
+            if(renderHeader==TRUE){
+              t.out.partial1 <- list(
+                div(id="rowLegacyReportHeader",
+                    fluidRow(
+                      div(column(2, div("Faculty"))),
+                      div(column(2, div("Courses Assigned (F/Sp/Su)"))),
+                      div(column(2, div("Courses")))
+                    ))
+              )
+              renderHeader <<- FALSE
+            } else t.out.partial1 <- NULL
+
+
+            t.out.partial2 <- list(
+              div(id=paste0("rowLegacyReport", i),
+                  fluidRow(
+
+                    div(column(2, div(targetInstructor, class=css.courseLoadStatus))),
+                    div(column(2, div(paste(AL1, "/", AL2, "/", SL), class=css.courseLoadStatus))),
+                    div(column(8, create.textboxes(semester.data, inSummaryInfo, i), inline=TRUE))
+                  ), class=cssClass
+              )
+            )
+            t.out.partial <- list(t.out.partial1, t.out.partial2)
+
+          }
+          t.out.partial
+        }
+
+        fix.names <- function(data){
+          check.duplicate.names <- function(in.data){
+            t.substr <- gsub(",.*$", "", in.data)
+            t.first <- gsub('.*,\\s*','', in.data)
+            t.first <- substr(t.first, 1,1)
+
+            if((t.substr=="Bednarz")|(t.substr=="Guneralp")|(t.substr=="Zhang"))
+              t.out <- paste0(t.first, ". ", t.substr)
+            else
+              t.out <- t.substr
+            t.out
+          }
+          t.out <- lapply(data, check.duplicate.names)
+          t.out
+        }
+
+        ########################################
+        # Report Logic                         #
+        ########################################
+
+        semester.code.new <- inSemesterCodes %>%
+          mutate(sem.name=paste(semester.chr, Year)) %>%
+          filter(sem.name==input$theSemester1) %>%
+          mutate(sem5=paste0("20", current.code)) %>%
+          select(sem5) %>%
+          unlist()
+
+        semester.data <- extractCurrentSemesterData(input$theSemester1)
+        academicYearData <- extractAcademicYearData(input$theSemester1)
+
+        if(dim(semester.data)[1] == 0){
+          t.out <- h4("No courses are scheduled to be taught this term.  Add courses using the Course Selection tab.", style="color: red")
+        } else{
+          summary.info <- semester.data %>%
+            group_by(instructor, UIN) %>%
+            summarise(num.assignments=n(), .groups="drop")
+
+          summary.info <- theCombinedData() %>%
+            mutate(shortName=displayName) %>%
+            filter(longSemester == input$theSemester1) %>%
+            filter(!is.na(rank)) %>%
+            select("instructor"="shortName", "rank", "load", "assigned.load") %>%
+            arrange(instructor) %>%
+            left_join(summary.info, by=c("instructor")) %>%
+            mutate(num.assignments=case_when(
+              is.na(num.assignments) ~ 0.0,
+              TRUE ~ as.double(num.assignments)
+            )) %>%
+            mutate(load=case_when(
+              is.na(load) ~ 0.0,
+              TRUE ~ as.double(load)
+            )) %>%
+            mutate(assigned.load=case_when(
+              is.na(assigned.load) ~ 0.0,
+              TRUE ~ as.double(assigned.load)
+            ))
+
+          t.summary.info <- summary.info
+
+
+          assign("last.number", 0, pos=1)
+          IDs <- seq_len(nrow(semester.data))
+          numInstructors <- dim(summary.info)[1]
+
+          t.out <- lapply(1:(numInstructors), generateHTML4Report, inSummaryInfo=summary.info)
+
+          t.out.check <- t.out
+        }
+
+        if(displayedInstructors == 0){
+          t.out <- h4(paste0("No instructors have assigned courses for ", input$theSemester1, "."), style="color: red")
+        }
+        t.out
+      })
       output$legacyReportSidebar <- renderUI({
         ns <- session$ns
         uiOutput(ns("chooseSemesterList1"))
@@ -520,6 +1014,10 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
       output$sem <- renderPrint({
         paste("[Report Module] inSemester:", inSemester())
       })
+
+      ########################################
+      # Output Options                       #
+      ########################################
 
       outputOptions(output, "chooseSemesterList1", suspendWhenHidden = FALSE)
       outputOptions(output, "legacyReportSidebar", suspendWhenHidden = FALSE)

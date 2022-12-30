@@ -22,8 +22,8 @@
 modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
   #determine difference between inData and the
   #remote data table.
-  # if(tableName=="combined_data") {
-  #   cat(green("browsing combined_data\n"))
+  # if(tableName=="master_courses") {
+  #   cat(green("browsing master_courses\n"))
   #   browser()
   # }
 

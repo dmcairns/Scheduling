@@ -281,12 +281,16 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
           unlist() %>%
           as.character()
 
-        new.UIN <- theCombinedData() %>%
-          filter(displayName==new.instructor) %>%
-          pull(UIN) %>%
-          unique()
+        if(new.instructor=="Unassigned"){
+          new.UIN <- "-9999"
+        } else {
+          new.UIN <- theCombinedData() %>%
+            filter(displayName==new.instructor) %>%
+            pull(UIN) %>%
+            unique()
+        }
 
-        browser()
+
         t.mc <- t.mc %>%
           mutate(instructor = case_when((courseID==t.courseID) & (semester==t.sem1) & (section==t.section) ~ new.instructor,
                                         TRUE ~ instructor)) %>%

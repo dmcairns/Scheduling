@@ -104,14 +104,15 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
       observeEvent(input$lastClickClassOptions1, {
         ns <- session$ns
         addSection <- function(in.courseID, in.semester){
-          cat(green("Add a section1:", in.semester, in.courseID, "\n"))
+          cat(green("Add a section:", in.semester, in.courseID, "\n"))
           showModal(modalDialog(
             id = "addSectionModal",
             h3("Insert a section"),
             uiOutput(ns("insertSectionDT")),
             title = "Insert Section",
             footer=list(actionButton(ns("insertSectionCommit"), "Commit"),
-                        actionButton(ns("dismissSectionButton"), "Dismiss"))
+                        actionButton(ns("dismissSectionButton"), "Dismiss")),
+            size="l"
           ))
           NULL
         }
@@ -217,6 +218,8 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           if ("H" %in% input$courseCharacteristics1) localH <- TRUE
           if ("SA" %in% input$courseCharacteristics1) localSA <- TRUE
         }
+        localStackedLogical <- input$stacked1
+        localStackedCourse <- input$stackedCourse1
 
         cat(red("before add_row\n"))
 
@@ -227,7 +230,14 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           filter(displayName==localInstructor) %>%
           pull(UIN) %>%
           unique()
-
+        if(localInstructor=="Unassigned"){
+          theUIN <- as.character(-9999)
+        }
+        if(localStackedLogical==TRUE){
+          localStackedCourseValue <- localStackedCourse
+        } else {
+          localStackedCourseValue <- NA_character_
+        }
         theRevisedMasterCourses <- theRevisedMasterCourses %>%
           add_row(recnum = as.character(nextRecNum),
                   Department = as.character(localDepartment),
@@ -242,9 +252,9 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
                   OL = localOL,
                   H = localH,
                   SA = localSA,
-                  stacked = NA,
-                  locad.contribution=1,
-                  Faculty=instructor,
+                  stacked = localStackedCourseValue,
+                  load.contribution=1,
+                  Faculty=as.character(localInstructor),
                   UIN=theUIN)
 
         cat("Added course to master.courses\n")
@@ -253,6 +263,9 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
         # Need to update the assigned loads     YYY   #
         ############################################
 
+        # Since the revision where loads are calculated when needed from theRevisedMasterCourses,
+        # I don't think that it is necessary to calculate t.assignedLoads any more.
+        #
         t.assignedLoads <- theRevisedMasterCourses %>%
           group_by(instructor, semester) %>%
           summarise(assigned.load=sum(load.contribution), .groups="drop")
@@ -263,63 +276,8 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
           select("recnum", "Faculty", "shortName", "shortNameNoSpace", "longSemester", "shortSemester", "numericSemester",
                  "sem2", "rank", "load", "assigned.load", "displayName", "UIN")
 
-
-        # if there are no courses scheduled for localSemester, then the following will throw
-        # an error.  need to add not only the course, but the semester to rv$offeredCourses.
-        #if(is.null(rv$offeredCourses[localSemester][[1]])){
-
-
-        ###################################################
-        # The code below handles the ocData               #
-        # which is currently not used in this             #
-        # app.  Commented out to test what happens if it  #
-        # is not done.                                    #
-        ###################################################
-
-        # theRevisedCoursesOffered <- theCoursesOffered()
-        # browser()
-        # if(is.null(theRevisedCoursesOffered[localSemester][[1]])){
-        #   #create the dataframe for this.
-        #   # Make sure that it is being added appropriately to rv$offeredCourses.
-        #   #  Get this warning:
-        #   # Warning in rv$offeredCourses[localSemester] <- tibble(Department = localDepartment,  :
-        #   #   number of items to replace is not a multiple of replacement length
-        #
-        #   #rv$offeredCourses[localSemester] <- tibble(
-        #   theRevisedCoursesOffered[[localSemester]] <- tibble(
-        #     Department = localDepartment,
-        #     Course=localCourse,
-        #     Description = localDescription,
-        #     semester = localSemester,
-        #     instructor = localInstructor,
-        #     courseID = localCourseID,
-        #     section = localSection,
-        #     W = localW,
-        #     C = localC,
-        #     OL = localOL,
-        #     H = localH,
-        #     SA = localSA
-        #   )
-        # } else {
-        #   theRevisedCoursesOffered[[localSemester]] %>%
-        #     add_row(Department = localDepartment,
-        #             Course = localCourse,
-        #             Description = localDescription,
-        #             semester = localSemester,
-        #             instructor = localInstructor,
-        #             courseID = localCourseID,
-        #             section = localSection,
-        #             W = localW,
-        #             C = localC,
-        #             OL = localOL,
-        #             H = localH,
-        #             SA = localSA) %>%
-        #     arrange(Department, courseID, section)
-        # }
-
         toReturn$mcData <- theRevisedMasterCourses
         toReturn$combinedData <- theRevisedCombinedData
-        # toReturn$ocData <- theRevisedCoursesOffered
         removeModal()
       })
       observeEvent(input$deleteSectionCommit, {
@@ -528,15 +486,24 @@ courseListingServer <- function(id, inSemesterCodes, theMasterCourses, theFacult
 
         t.out <- lapply(1:(numSections), function(i) {
           list(
+            fluidRow(div(id="insertModalRowHeader"),
+                     column(2, a("Course")),
+                     column(2, a("Section")),
+                     column(1, a("Stacked")),
+                     column(1, a("Course")),
+                     column(2, a("Instructor")),
+                     column(4, a("Options"))),
             fluidRow(div(id="insertModalRow",
                          column(2, textInput(ns(paste0("courseNew", i)), label=NULL, value=t.courseID)),
                          column(2, textInput(ns(paste0("sectionNew", i)), label=NULL, value=new.sectionNum[i])),
-                         column(3, selectInput(ns(paste0("instructorNew", i)),
+                         column(1, checkboxInput(ns(paste0("stacked", i)), label="stacked", value=FALSE)),
+                         column(1, textInput(ns(paste0("stackedCourse", i)), label=NULL)),
+                         column(2, selectInput(ns(paste0("instructorNew", i)),
                                                label = NULL,
                                                choices=instructorList,
                                                selected="Unassigned"
                          )),
-                         column(5, checkboxGroupInput(ns(paste0("courseCharacteristics", i)),
+                         column(4, checkboxGroupInput(ns(paste0("courseCharacteristics", i)),
                                                       label=NULL,
                                                       inline=TRUE,
                                                       choices=c("W", "C", "H", "OL", "SA")))

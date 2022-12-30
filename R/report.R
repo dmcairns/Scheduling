@@ -149,11 +149,9 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             if(in.data[[i]]$OL) display.class <- "LegacyReportOfferedCourseOnline"
             t.output <- column(2,div(in.data[[i]]$courseID, class=display.class))
           }
-          #cat("individual.element:", in.data[[i]]$courseID, "\n")
           t.output
         }
         create.textboxes <- function(data, data.summary, i){
-          #browser()
           courses.found <- find.courses(data, data.summary, i)
           numCourses <- dim(courses.found)[1]
           t.out <- lapply(1:(numCourses), function(j) {
@@ -161,7 +159,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           })
 
           if(is.na(t.out[[1]][2])) {
-            #cat("***********************In is.na(t.out):\n")
             instructor.of.interest <- data.summary[i,"instructor"]
             instructor.of.interest <- as.vector(unlist(instructor.of.interest))
 
@@ -172,7 +169,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             t.load <- theCombinedData() %>%
               mutate(shortName=displayName) %>%
               filter(shortName == instructor.of.interest) %>%
-              #filter(longSemester == inSemester()) %>%
               filter(longSemester == input$theSemester1) %>%
               select("Faculty"="shortName", "semester"="longSemester", "load") %>%
               mutate(load = case_when(
@@ -184,7 +180,6 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             if(as.numeric(t.load[3]) == 0) {
               leaveType <- theLeaveData() %>%
                 filter(faculty==instructor.of.interest) %>%
-                #filter(semester==inSemester()) %>%
                 filter(semester==input$theSemester1) %>%
                 select(leaveType) %>%
                 unlist()

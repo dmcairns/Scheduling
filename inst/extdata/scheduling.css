@@ -12,15 +12,15 @@
 
 
 .instructorLoadsTable .dataTable thead th {
-  
+
   padding-top: 2% !important;
   padding-bottom: 2% !important;
   color: #FFFFFF;
   background-color: #707373;
   border: 1px solid !important;
   border-color: black !important;
-  
-  
+
+
 }
 .instructorLoadsTable .even {
   background: #D6D3C4 !important;
@@ -47,7 +47,7 @@
   border-right: 1px solid !important;
   border-top: 1px solid !important;
   border-color: black !important;
-  
+
 }
 .instructorLoadsTable .even td {
   font-weight: bold !important;
@@ -62,7 +62,7 @@
   padding-right: 0 !important;
 }
 .instructorLoadsTable .even td input {
-  
+
   color: #333;
 }
 .instructorLoadsTable .sorting_disabled th {
@@ -81,7 +81,7 @@
   width: 25%;
 
 }
-.classOptionsTable .dataTable thead th { 
+.classOptionsTable .dataTable thead th {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   color: #FFFFFF;
@@ -110,7 +110,7 @@
   padding-bottom: 1px !important;
   border-bottom: none !important;
   border-top: none !important;
-  
+
 }
 .classOptionsTable .even td {
   font-weight: bold !important;
@@ -127,7 +127,7 @@
 /******************************************/
 
 #graphicalScheduleNewDT .dataTable thead th {
-  
+
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   color: #FFFFFF;
@@ -151,7 +151,7 @@
   padding-bottom: 1px !important;
   border-bottom: none !important;
   border-top: none !important;
-  
+
 }
 #graphicalScheduleNewDT .even td {
   font-weight: bold !important;
@@ -195,7 +195,7 @@
   padding-bottom: 1px !important;
   border-bottom: none !important;
   border-top: none !important;
-  
+
 }
 .instructorAssignmentTable .even td {
   font-weight: bold !important;
@@ -213,7 +213,7 @@
 /* Beginning of classes for Long Term Planning Page */
 .LongTermPlanningHeader{
   text-align: center;
-}  
+}
 
 
 /* End of classes for Long Term Planning Page */
@@ -256,13 +256,13 @@
   margin-right: auto;
 }
 .graphicalScheduleColumn3{
-  /*border: 2px solid #73AD21; */ 
+  /*border: 2px solid #73AD21; */
   /*background: #707373; */
   color: #FFFFFF;
   /*padding-left: 0;*/
 }
 .graphicalScheduleDescription{
-  /* background: #967e73; 
+  /* background: #967e73;
   font-size: 85%; */
   position: relative;
   /*right: 1em; */
@@ -285,7 +285,7 @@
   padding-left: 0;
 }
 .graphicalScheduleHeaderRow{
-  background: #707373; 
+  background: #707373;
   /*padding: 2%;*/
 }
 .graphicalScheduleHeaderDivCSS{
@@ -301,7 +301,7 @@
 .graphicalScheduleRowOdd{
   background: rgb(153, 133,66);
   background: rgba(153, 133, 66, 0.5);
-  
+
 }
 .courseButtonStyle {
   background: #500000;
@@ -310,13 +310,13 @@
   background: #500000;
   color: #FFFFFF;
   opacity: 1;
-  
+
 }
 .courseButtonStyleUnselected {
   background: rgb(80,0,0);
   background: rgba(80,0,0,0.3);
   color: #FFFFFF;
-  
+
 }
 .testCSS1{
   background: #500000;
@@ -329,7 +329,7 @@
 
 
 .availableBackups{
-  
+
   background: #500000;
   color: #FFFFFF;
   border-radius: 5px;
@@ -346,7 +346,7 @@
 #courseNumberColumn{
   /*outline: 1px solid red;*/
   padding: 0;
-  
+
 }
 .rowLegacyReportClass{
   background: #500000;
@@ -381,10 +381,10 @@
   outline: 1px solid green;
 }
 #insertModalRow {
-  display:flex;    
+  display:flex;
   align-items:baseline;
   /*height: 48px;*/
-  
+
 }
 #buildGrid{
   background: #D6D3C4;
@@ -431,18 +431,18 @@
   background: #500000;
 }
 /* #sectionsOptions1_2019C .shiny-bound-input {
-  
+
   background: #D6D3C4;
   color: #FFFFFF;
   height: 20px;
   padding: 0;
-  
+
 }*/
 /* #sectionsOptions1_2019C -webkit-inner-spin-button{
   -webkit-appearance: none;
   -moz-appearance: none;
   margin: 0;
-  
+
 } */
 
 #instructorNew1 .shinyjs-resettable{
@@ -451,7 +451,7 @@
 }
 #availableFacultyHeader{
   background: #D6D3C4;
-  
+
 }
 #sectionNew1 .form-control {
   background: #D6D3C4;
@@ -464,7 +464,7 @@
   background: #707373;
   color: #ffffff;
 }
-#chooseSemesterList10BeginNew .selectize-input { 
+#chooseSemesterList10BeginNew .selectize-input {
   background: #707373;
   color: #ffffff;
 }
@@ -496,7 +496,7 @@
   padding: 0;
 }
 #loadContainer{
-  border: 1px solid black; 
+  border: 1px solid black;
   padding: 0;
 }
 #wholeRowContainer{
@@ -571,7 +571,7 @@
 
 .FN_Hyperlink{
   padding: 3%;
-   color: #003C71; 
+   color: #003C71;
 }
 .testDiv{
   /*border: 1px solid green;*/
@@ -628,7 +628,7 @@
   padding-right: 0;
   padding-top: 0;
   padding-bottom: 2%;
-  
+
 }
 
 .AL_Hyperlink{
@@ -707,13 +707,13 @@
 }
 .positionCode11{
   background: #707373;
-  opacity: 0.6;  
+  opacity: 0.6;
   color: #FFFFFF;
   text-align: center;
 }
 .positionCode12{
   background: #707373;
-  opacity: 0.3;  
+  opacity: 0.3;
   color: #FFFFFF;
   text-align: center;
 }
@@ -735,7 +735,7 @@
     font-family: "Arial", Helvetica, sans-serif;
     font-size: 70%;
     text-align: center;
-   
+
 
 }
 
@@ -774,23 +774,23 @@
 .futureCourseHeader1Blank{
     background: #500000;
     color: #500000;
-    
+
 }
 .futureCourseHeader1Blank2{
     background: #500000;
     color: #500000;
     font-size: 70%;
-    
+
 }
 .futureCourseHeader2Blank{
   background: #744F28;
   color: #FFFFFF;
-  
+
 }
 .futureCourseHeader3Blank{
   background: #998542;
   color: #FFFFFF;
-  
+
 }
 .futureCourseHeader2{
     background: #744F28;
@@ -799,7 +799,7 @@
     font-size: 70%;
     text-align: center;
     margin: 0;
-    
+
 }
 .futureCourseHeader3{
     background: #998542;
@@ -808,14 +808,14 @@
     font-size: 70%;
     text-align: center;
     margin: 0;
-   
+
 }
 .futureCourseOffered1{
     background: #D6D3C4;
     font-family: "Arial", Helvetica, sans-serif;
     font-size: 70%;
     text-align: center;
-    
+
 }
 .BlankText1{
     background: #D6D3C4;
@@ -823,7 +823,7 @@
     font-size: 70%;
     text-align: center;
     color: #D6D3C4;
-    
+
 }
 .BlankText1b{
     background: #D6D3C4;
@@ -832,7 +832,7 @@
     text-align: center;
     border-left: 1px solid black;
     color: #D6D3C4;
-    
+
 }
 .futureCourseOffered1b{
     background: #D6D3C4;
@@ -840,7 +840,7 @@
     font-size: 70%;
     text-align: center;
     border-left: 1px solid black;
-    
+
 }
 .futureCourseOffered2{
     background: #FFFFFF;
@@ -876,7 +876,7 @@
     font-family: "Arial", Helvetica, sans-serif;
     text-align: center;
     outline: 1px solid black;
-    
+
 }
 .futureCourseOffered2Blank{
     background: #FFFFFF;
@@ -931,7 +931,7 @@
 }
 .LegacyReportFacultyOK {
   /*border: 1px solid #e2ca73;*/
-  
+
 }
 .LegacyReportFacultyOverload {
   /*background: #a30000;
@@ -943,7 +943,7 @@
   /*background: #b3ffb3;
   border: 3px solid #a78e62;*/
   /*border: 1px dashed red;*/
-  color: #E4002B;
+  color: #4dad48;
 }
 .scheduledClassesHeader{
   background: #b3ffb3;
@@ -966,35 +966,35 @@
 }
 .scheduledClassesCourseID{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .scheduledClassesDescription{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .scheduledClassesSection{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .scheduledClassesInstructor{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .scheduledClassesOnline{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .scheduledClassesW{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .instructorLoadsFaculty{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .instructorLoadsLoad{
   background: #b3ffb3;
-  border: 3px solid #73AD21; 
+  border: 3px solid #73AD21;
 }
 .courseButtonStyle {
   background: #b3ffb3;
@@ -1006,7 +1006,7 @@
   margin-bottom: 0; /* this puts space around the outside of the div */
   border: 1px solid #ccc;
   border-radius: 4px;
-  color: #0e0345;  
+  color: #0e0345;
 }
 
 .col-sm-1{
@@ -1065,6 +1065,6 @@
   z-index: 100000000000;
   background-color: white;
   top: 8px;
-  right: 10px; 
+  right: 10px;
   visibility: hidden;
 }

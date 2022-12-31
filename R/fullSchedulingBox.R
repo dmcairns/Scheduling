@@ -71,14 +71,37 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       rds.path <- ".//Data//"
       semester.codes <- schedulingDataBundle$semester.codes
 
-      if (allowUpdateDB){
-        dbConn <- dbConnect(RPostgres::Postgres(),
-                            dbname = 'mcairns/geogscheduling', # database name
-                            host = 'db.bit.io',
-                            port = 5432,
-                            user = 'mcairns',
-                            password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+
+      if (is.null(allowUpdateDB)){
+        #############################################
+        # This is the initial state that allows a   #
+        # simple security test to allow updating    #
+        # the remote database.                      #
+        #############################################
+
+        theLoginModal <- function() {
+          ns <- session$ns
+          modalDialog(
+            textInput(ns("thePassword"), "Password"),
+
+            footer = tagList(
+              modalButton("Cancel"),
+              actionButton(ns("submitPassword"), "Submit")
+            ),
+            size="s"
+          )
+        }
+
+        showModal(theLoginModal())
       }
+      # if (allowUpdateDB){
+      #   dbConn <- dbConnect(RPostgres::Postgres(),
+      #                       dbname = 'mcairns/geogscheduling', # database name
+      #                       host = 'db.bit.io',
+      #                       port = 5432,
+      #                       user = 'mcairns',
+      #                       password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+      # }
 
       theRVData <- reactiveValues(mcData=schedulingDataBundle$mcData, afData=schedulingDataBundle$afData,
                                   combinedData=schedulingDataBundle$combinedData,

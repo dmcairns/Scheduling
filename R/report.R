@@ -905,7 +905,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         }
 
         generateHTML4Report <- function(i, inSummaryInfo) {
-
+          #browser()
           targetInstructor <- inSummaryInfo$Faculty[i]
 
           if(i==1){

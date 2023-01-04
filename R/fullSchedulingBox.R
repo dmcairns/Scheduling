@@ -49,7 +49,7 @@ fullSchedulingBoxModuleUI <- function(id){
 #'
 #' @examples
 fullSchedulingBoxModuleServer <- function(id, input, output, session, schedulingDataBundle, boxArrangement="classic",
-                                          allowUpdateDB){
+                                          initialAllowUpdateDB){
   moduleServer(
     id,
     function(input, output, session){
@@ -70,9 +70,12 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       accessRemoteData <- FALSE
       rds.path <- ".//Data//"
       semester.codes <- schedulingDataBundle$semester.codes
+      localAllowUpdateDB <- reactiveVal()
 
+      allowUpdateDB <- FALSE
 
-      if (is.null(allowUpdateDB)){
+      # if (is.null(allowUpdateDB)){
+      if(!allowUpdateDB){
         #############################################
         # This is the initial state that allows a   #
         # simple security test to allow updating    #
@@ -82,8 +85,13 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         theLoginModal <- function() {
           ns <- session$ns
           modalDialog(
-            textInput(ns("thePassword"), "Password"),
-
+            tagList(
+              div(
+                h3("Enter password to allow editing data.  Otherwise click Cancel"),
+                class="passwordBox"
+              ),
+              textInput(ns("thePassword"), "Password")
+            ),
             footer = tagList(
               modalButton("Cancel"),
               actionButton(ns("submitPassword"), "Submit")
@@ -91,17 +99,37 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
             size="s"
           )
         }
-
         showModal(theLoginModal())
       }
-      # if (allowUpdateDB){
-      #   dbConn <- dbConnect(RPostgres::Postgres(),
-      #                       dbname = 'mcairns/geogscheduling', # database name
-      #                       host = 'db.bit.io',
-      #                       port = 5432,
-      #                       user = 'mcairns',
-      #                       password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
-      # }
+
+      observeEvent(input$submitPassword, {
+        cat("submitPassword clicked")
+        # do the password check and if accurate then change the value of
+        #localAllowUpdateDB(764)
+        if(input$thePassword=="stove1"){
+          allowUpdateDB <<- TRUE
+          #cat("localAllowUPdateDB =", localAllowUpdateDB(), "\n")
+          dbConn <<- dbConnect(RPostgres::Postgres(),
+                               dbname = 'mcairns/geogscheduling', # database name
+                               host = 'db.bit.io',
+                               port = 5432,
+                               user = 'mcairns',
+                               password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+          removeModal()
+        } else {
+          cat(red("Incorrect Passord\n"))
+        }
+          cat("allowUpdateDB = ", allowUpdateDB, "\n")
+
+      })
+      if (allowUpdateDB){
+        dbConn <- dbConnect(RPostgres::Postgres(),
+                            dbname = 'mcairns/geogscheduling', # database name
+                            host = 'db.bit.io',
+                            port = 5432,
+                            user = 'mcairns',
+                            password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+      }
 
       theRVData <- reactiveValues(mcData=schedulingDataBundle$mcData, afData=schedulingDataBundle$afData,
                                   combinedData=schedulingDataBundle$combinedData,
@@ -151,7 +179,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           } else if (current.date < t.b) {
             t.letter <- "B"
           } else t.letter <- "C"
-          current.semester1 <- paste(paste.year+1, t.letter, sep="")
+          current.semester1 <- paste(paste.year, t.letter, sep="")
         }
         current.semester1
       }
@@ -204,11 +232,6 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
 
       output$sidebarSemesterUI <- renderUI({
         ns <- session$ns
-        #cat(yellow("[fullSchedulingBoxModuleServer]"), green("output$sidebarSemesterUI\n"))
-        #print(schedulingDataBundle$semester.codes)
-        #print(names(schedulingDataBundle))
-        #assign("t.1", schedulingDataBundle, pos=1)
-        #cat(yellow("[fullSchedulingBoxModuleServer]"), green("after print semester.codes\n"))
 
         currentYear <- year(today())
         currentYearPlus5 <- currentYear+5
@@ -339,7 +362,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
       })
       observeEvent(modifiedData2$combinedData, {
         cat(yellow("[App] modifiedData2$combinedData changed1\n"))
-
+        cat(green("allowUpdateDB:", allowUpdateDB, "\n"))
         theRVData$combinedData <- modifiedData2$combinedData
         # storedNames <- names(theRVData$combinedData)
         # names(theRVData$combinedData) <- tolower(names(theRVData$combinedData))
@@ -402,6 +425,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
                               key="recnum")
         }
       })
+
 
       #cat(yellow("[fullSchedulingBoxModuleServer]"), green("Before modules\n"))
       reportModuleServer("testReport", inSemester=reactive(input$sidebarSemester),

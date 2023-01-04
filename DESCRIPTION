@@ -26,3 +26,5 @@ Imports:
     DBI,
     dbplyr
 RoxygenNote: 7.2.1
+URL: https://github.com/dmcairns/Scheduling
+BugReports: https://github.com/dmcairns/Scheduling/issues

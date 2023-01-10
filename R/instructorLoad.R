@@ -373,6 +373,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           select(current) %>%
           pull(current)
 
+
         loadTableData <- theCombinedData() %>%
           filter(numericSemester >= firstSemesterIndex) %>%
           filter(numericSemester <= lastSemesterIndex) %>%
@@ -382,6 +383,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           mutate(loadHTML=case_when(is.na(rank) == TRUE ~ "Test",
                                     TRUE ~ paste0("<div id='load_", .$shortNameNoSpace, "_",.$sem2, "', class=positionCode",.$rank,">", .$load, "</div>"))) %>%
           select("Faculty"="FacultyHTML", "shortSemester", "load"="loadHTML") %>%
+          arrange(shortSemester) %>%
           pivot_wider(names_from=shortSemester, values_from=load)
 
         datatable(loadTableData,
@@ -1089,6 +1091,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
       })
       observeEvent(input$lastClickAvailableFaculty1 ,{
         cat(yellow("In observeEvent(input$lastClickAvailable1\n"))
+
         t.elements <- unlist(strsplit(input$lastClickAvailableFacultyId, "_"))
         inFaculty <- t.elements[2]
         inSemester <- t.elements[3]

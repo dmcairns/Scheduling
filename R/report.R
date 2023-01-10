@@ -905,7 +905,11 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
         }
 
         generateHTML4Report <- function(i, inSummaryInfo) {
-          #browser()
+          if (nrow(inSummaryInfo)==0){
+            theHTML <- tagList(
+              h3("No courses scheduled")
+            )
+          } else {
           targetInstructor <- inSummaryInfo$Faculty[i]
 
           if(i==1){
@@ -957,6 +961,7 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
             } else {
               theHTML <- list(theHTML, t.out.partial2)
             }
+          }
           }
           theHTML
         }

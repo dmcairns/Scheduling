@@ -109,12 +109,17 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         if(input$thePassword=="stove1"){
           allowUpdateDB <<- TRUE
           #cat("localAllowUPdateDB =", localAllowUpdateDB(), "\n")
-          dbConn <<- dbConnect(RPostgres::Postgres(),
-                               dbname = 'mcairns/geogscheduling', # database name
-                               host = 'db.bit.io',
-                               port = 5432,
-                               user = 'mcairns',
-                               password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+          # dbConn <<- dbConnect(RPostgres::Postgres(),
+          #                      dbname = 'mcairns/geogscheduling', # database name
+          #                      host = 'db.bit.io',
+          #                      port = 5432,
+          #                      user = 'mcairns',
+          #                      password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+          dbConn <<- dbConnect(RMySQL::MySQL(),
+                              dbname = 'DH_Admin_Data',
+                              host = '128.194.19.22',
+                              user = 'cairns',
+                              password = "tWGYrRPDqtB9Eo3FJZ")
           removeModal()
         } else {
           cat(red("Incorrect Passord\n"))
@@ -123,12 +128,17 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
 
       })
       if (allowUpdateDB){
-        dbConn <- dbConnect(RPostgres::Postgres(),
-                            dbname = 'mcairns/geogscheduling', # database name
-                            host = 'db.bit.io',
-                            port = 5432,
-                            user = 'mcairns',
-                            password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+        # dbConn <- dbConnect(RPostgres::Postgres(),
+        #                     dbname = 'mcairns/geogscheduling', # database name
+        #                     host = 'db.bit.io',
+        #                     port = 5432,
+        #                     user = 'mcairns',
+        #                     password = "v2_3vDkz_xCxb4TxUfgZYdZ2Fa4X9pr6")
+        dbConn <- dbConnect(RMySQL::MySQL(),
+                            dbname = 'DH_Admin_Data',
+                            host = '128.194.19.22',
+                            user = 'cairns',
+                            password = "tWGYrRPDqtB9Eo3FJZ")
       }
 
       theRVData <- reactiveValues(mcData=schedulingDataBundle$mcData, afData=schedulingDataBundle$afData,
@@ -288,7 +298,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         if(allowUpdateDB){
           modifyRemoteDBTable(dbConn,
                               inData= modifiedData$mcData,
-                              tableName="master_courses",
+                              tableName="masterCourses",
                               key="recnum")
         }
       })
@@ -302,7 +312,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         if(allowUpdateDB){
           modifyRemoteDBTable(dbConn,
                               inData= modifiedData1$mcData,
-                              tableName="master_courses",
+                              tableName="masterCourses",
                               key="recnum")
         }
       })
@@ -315,7 +325,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
         if(allowUpdateDB){
           modifyRemoteDBTable(dbConn,
                               inData= modifiedData3$mcData,
-                              tableName="master_courses",
+                              tableName="masterCourses",
                               key="recnum")
         }
       })
@@ -331,7 +341,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData2$leaveData,
-                                tableName="faculty_leave",
+                                tableName="facultyLeave",
                                 key="recnum")
           }
         }
@@ -344,7 +354,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData$combinedData,
-                                tableName="combined_data",
+                                tableName="combinedData",
                                 key="recnum")
           }
         }
@@ -355,12 +365,13 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData1$combinedData,
-                                tableName="combined_data",
+                                tableName="combinedData",
                                 key="recnum")
           }
         }
       })
       observeEvent(modifiedData2$combinedData, {
+        #browser()
         cat(yellow("[App] modifiedData2$combinedData changed1\n"))
         cat(green("allowUpdateDB:", allowUpdateDB, "\n"))
         theRVData$combinedData <- modifiedData2$combinedData
@@ -371,7 +382,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData2$combinedData,
-                                tableName="combined_data",
+                                tableName="combinedData",
                                 key="recnum")
           }
         }
@@ -382,7 +393,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData2$mcData,
-                                tableName="master_courses",
+                                tableName="masterCourses",
                                 key="recnum")
           }
         }
@@ -393,7 +404,7 @@ fullSchedulingBoxModuleServer <- function(id, input, output, session, scheduling
           if(allowUpdateDB){
             modifyRemoteDBTable(dbConn,
                                 inData= modifiedData2$facultyUIN,
-                                tableName="faculty_uin",
+                                tableName="facultyUIN",
                                 key="recnum")
           }
         }

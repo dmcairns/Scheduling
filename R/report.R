@@ -547,7 +547,8 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           t.output
         }
         create.textboxes <- function(data, data.summary, i){
-          #if(i==3) browser()
+          #if(i==19) browser()
+
           courses.found <- find.courses(data, data.summary, i)
           numCourses <- dim(courses.found)[1]
           t.out <- lapply(1:(numCourses), function(j) {
@@ -994,12 +995,17 @@ reportModuleServer <- function(id, input, output, session, inSemester, theMaster
           unlist()
 
         semester.data <- extractCurrentSemesterData(input$theSemester1)
-        academicYearData <- extractAcademicYearData(input$theSemester1)
+        academicYearData <- extractAcademicYearData(input$theSemester1) # Both Ma and VAP (GIS) are missing from academicYearData
 
 
+#browser()
         if(dim(semester.data)[1] == 0){
           t.out <- h4("No courses are scheduled to be taught this term.  Add courses using the Course Selection tab.", style="color: red")
         } else{
+          semester.data <- semester.data %>%
+            mutate(instructor=Faculty)          # This is a hack.  Fix this elsewhere so that instructor is updated
+                                                # when Faculty name is changed.  In instructorLoad.R?
+          # at this point Faculty = "Ma" and instructor = "VAP (GIS)"
           summary.info <- semester.data %>%
             group_by(instructor, UIN) %>%
             summarise(num.assignments=n(), .groups="drop")

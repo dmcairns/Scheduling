@@ -282,7 +282,7 @@ instructorAssignmentModuleServer <- function(id, input, output, session, inSemes
           as.character()
 
         if(new.instructor=="Unassigned"){
-          new.UIN <- "-9999"
+          new.UIN <- -9999
         } else {
           new.UIN <- theCombinedData() %>%
             filter(displayName==new.instructor) %>%

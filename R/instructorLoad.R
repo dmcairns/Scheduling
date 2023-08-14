@@ -870,7 +870,9 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
               select("semNoSpace") %>%
               unlist() %>%
               as.vector()
-
+            cat(red("I think the problem with changing rank is because of () in the name.\n"))
+            cat(red(paste0("facultyRankSelect_", unlist(fixNamesNoSpace(fix.names(theExistingName))), "_", inSemNoSpace), "\n"))
+            cat(red("Remove () from element name when the element is created. Possibly in fixNamesNoSpace function.\n"))
             new.rank <- c(new.rank, isolate(input[[paste0("facultyRankSelect_", unlist(fixNamesNoSpace(fix.names(theExistingName))), "_", inSemNoSpace)]]))
 
           }  #End of for loop
@@ -882,7 +884,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
               pull(rank)
           }
 
-          #cat(yellow("before smallData\n"))
+          cat(yellow("before smallData\n"))
           #convert displayedSemesters to shortSemester format
           displayedSemestersShort <- inSemesterCodes %>%
             filter(longSemester %in% displayedSemesters) %>%
@@ -891,12 +893,13 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
             as.vector()
 
           smallData <- data.frame(Faculty=updatedName, shortSemester=displayedSemestersShort, rank=as.integer(new.rank),  stringsAsFactors = FALSE)
-
+          #browser()
           tTemp <- smallData %>%
             anti_join(revisedCombinedData, by=c("Faculty", "shortSemester", "rank")) %>%
             select("Faculty", "shortSemester", "new.rank"="rank") %>%
             left_join(inSemesterCodes, by=c("shortSemester"="semester4")) %>%
-            select("Faculty", "shortSemester", "new.rank", "numericSemester"="current", "sem2"="current.code", "longSemester")
+            select("Faculty", "shortSemester", "new.rank", "numericSemester"="current", "sem2"="current.code", "longSemester") %>%
+            mutate(numericSemester=as.integer(numericSemester))
 
           duplicateLastNames <- c("Guneralp", "Bednarz", "Zhang")
 
@@ -955,6 +958,10 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           revisedMasterCourses <- theMasterCourses() %>%
             mutate(Faculty=case_when(instructor == createShortFacultyName(theExistingName) ~ createShortFacultyName(updatedName),
                                      TRUE ~ instructor))
+
+          ##################################################################
+          # if the UIN is changed it needs to be updated in masterCourses. #
+          ##################################################################
 
           modifiedAvailableFaculty <- revisedCombinedData %>%
             select("Faculty", "shortSemester", "rank") %>%
@@ -1050,6 +1057,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           }
           cat("facultyMemberName:", facultyMemberName, "\n")
           cat("facultyMemberUIN:", facultyMemberUIN, "\n")
+          #browser()
           toReturn$oldFacultyName <- facultyMemberName
           modalDialog(
             textInput(ns("fName"), "Edit Name",
@@ -1091,6 +1099,7 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
       })
       observeEvent(input$lastClickAvailableFaculty1 ,{
         cat(yellow("In observeEvent(input$lastClickAvailable1\n"))
+        # This routine increments the load
 
         t.elements <- unlist(strsplit(input$lastClickAvailableFacultyId, "_"))
         inFaculty <- t.elements[2]
@@ -1159,13 +1168,15 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
           pull(UIN)
         # originalUIN is always blank for faculty that are not included in facultyUINs
         # like VAP (Physical 1)
+        #browser()
         if(length(originalUIN)==0){
           cat("The original UIN is blank.\n")
           # This is a hack to handle conditions where there
           # is a name for a faculty member, but no UIN.  This
           # probably will not be necessary after the initial clean up
           # of the data.
-          tempUIN <- as.character(sample(1:100, 1))
+          #tempUIN <- as.character(sample(1:100, 1)) #used when input Data (facultyUINs()) is character
+          tempUIN <- sample(1:10000, 1)
           originalUIN <- tempUIN
           theRevisedUINs <- facultyUINs() %>%
             mutate(UIN=case_when(UIN=="" ~ tempUIN,
@@ -1175,8 +1186,11 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         }
         newUIN <- input$fUIN
 
+        # theRevisedUINs <- theRevisedUINs %>%
+        #   mutate(UIN=case_when(UIN==originalUIN ~ newUIN,
+        #                        TRUE ~ UIN))
         theRevisedUINs <- theRevisedUINs %>%
-          mutate(UIN=case_when(UIN==originalUIN ~ newUIN,
+          mutate(UIN=case_when(UIN==originalUIN ~ as.numeric(newUIN),
                                TRUE ~ UIN))
         toReturn$facultyUIN <- theRevisedUINs
 
@@ -1315,10 +1329,14 @@ instructorLoadModuleServer <- function(id, input, output, session, inSemester, t
         current.semester1
       }
       fixNamesNoSpace <- function(inData){
-        outData <- gsub(". ", "", inData, fixed=TRUE)
+        # outData <- gsub("(", "", inData, fixed=TRUE)
+        # outData <- gsub(")", "", inData, fixed=TRUE)
+        outData <- gsub('[^[:alnum:] ]', "", inData)
+        outData <- gsub(". ", "", outData, fixed=TRUE)
         outData <- gsub("'", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
         #outData <- gsub("’", "", outData, fixed=TRUE)  #New addition to solve problem with adding employment
         outData <- gsub(" ", "", outData, fixed=TRUE)
+        #browser()
         outData
       }
       fix.names <- function(data){

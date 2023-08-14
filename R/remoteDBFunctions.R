@@ -22,15 +22,12 @@
 modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
   #determine difference between inData and the
   #remote data table.
-  # if(tableName=="master_courses") {
-  #   cat(green("browsing master_courses\n"))
-  #   browser()
-  # }
 
-  #browser()
+
+
   query <- paste0("SELECT * FROM ", tableName)
   remoteData <- DBI::dbGetQuery(dbConn, sql(query))
-  if(tableName == "combined_data") {
+  if(tableName == "combinedData") {
     inData <- inData %>%
       mutate(load=as.double(load))
     remoteData <- remoteData %>%
@@ -59,13 +56,17 @@ modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
         for(i in 1:nrow(recordsWithChanges)){
           # update each element
           statementPrefix <- paste0("UPDATE ", tableName, " SET ")
-          statementSuffix <- paste0("WHERE \"", key, "\" = '", recordsWithChanges[i,key], "'")
+          statementSuffix <- paste0("WHERE ", key, " = '", recordsWithChanges[i,key], "'")
           theFields <- names(recordsWithChanges)
           theFields <- setdiff(theFields, key)
           update_statement <- statementPrefix
+
           for(j in 1:length(theFields)){
             #update_statement <- paste0(update_statement, "\"", theFields[j], "\" = '", recordsWithChanges[i, theFields[j]], "'")
-            update_statement <- paste0(update_statement, "\"", theFields[j], "\"=")
+            #update_statement <- paste0(update_statement, "\"", theFields[j], "\"=")
+            update_statement <- paste0(update_statement, "`", theFields[j], "`=")
+            #update_statement <- paste0(update_statement, theFields[j], "=")
+
             if(!is.na(recordsWithChanges[i, theFields[j]])){
               update_statement <- paste0(update_statement,"'", recordsWithChanges[i, theFields[j]], "'")
             } else {
@@ -79,7 +80,9 @@ modifyRemoteDBTable <- function(dbConn, inData, tableName, key="recnum"){
           #   cat(green("browsing combined_data\n"))
           #   browser()
           # }
+
           update_statement <- paste(update_statement, statementSuffix)
+
           DBI::dbExecute(dbConn, update_statement)
         }
       }
